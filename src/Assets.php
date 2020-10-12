@@ -10,7 +10,7 @@ class Assets {
 
     public static $instance = null;    
 
-   
+    public $manifest = null;
         
     /**
      * init
@@ -20,10 +20,12 @@ class Assets {
     public function init() {
         $this->config = Config::getInstance()->get("assets");
 
-        if(Finder::getInstance()->fileExists(get_template_directory() . '/assets/manifest.json')) {
-            $this->manifest = file_get_contents(get_template_directory() . '/assets/manifest.json');
-        }else {
-            throw new ManifestAssetsNotFound();
+        if($this->config['manifest']) {
+            if(Finder::getInstance()->fileExists(get_template_directory() . '/assets/'.$this->config['manifest'])) {
+                $this->manifest = json_decode(file_get_contents(get_template_directory() . '/assets/'.$this->config['manifest']), true);
+            }else {
+                throw new ManifestAssetsNotFound();
+            }
         }
 
         add_action('wp_enqueue_scripts', [$this, 'registerMainScripts']);
@@ -39,11 +41,16 @@ class Assets {
         // get main css file name
         if($this->config) {
 
-            foreach($this->config as $assets) {
-                dump($this->config);
-                foreach($assets as $asset) {
-                    $this->$type($asset);
-                }
+            foreach($this->config as $key => $assets) {
+
+                // if key == css || js
+               if($key == $type) {
+                   //      css|js      path
+                   foreach($assets as $asset) {
+                       $this->$type($asset);
+                   }
+                   
+               }
                
             } 
         }else {
@@ -58,7 +65,7 @@ class Assets {
      */
     function registerMainScripts() {
         
-        $this->js("runtime.js");  
+        // $this->js("runtime.js");  
         $this->loadDefaultScript("js");  
         $this->loadDefaultScript("css");  
     }
@@ -72,11 +79,10 @@ class Assets {
      * @return void
      */
     function css($file, $groupe = null) {
-
         if(!$groupe) {
             $groupe = $this->getGroup($file);
         }
-        wp_register_style($groupe, assets($file), null);
+        wp_register_style($groupe,  $this->assetPath($file), null);
         wp_enqueue_style($groupe);
     }
  
@@ -92,9 +98,30 @@ class Assets {
         if(!$groupe) {
             $groupe = $this->getGroup($file);
         }
-        wp_register_script($groupe, assets($file), [], '1.0.0', true);
+
+        
+        wp_register_script($groupe, $this->assetPath($file), [], '1.0.0', true);
         wp_enqueue_script($groupe);
     }
+    
+    /**
+     * js
+     *
+     * @param  mixed $file
+     * @param  mixed $groupe
+     * @return void
+     */
+    function assetPath($key) {
+        if($this->manifest) {
+            dump( $this->manifest[$key]);
+            return get_stylesheet_directory_uri() . '/assets' . $this->manifest[$key];
+        } else {
+            return get_stylesheet_directory_uri() . '/assets/' . $key;
+        }
+     
+    }
+
+    
 
     /**
      * getGroup
@@ -123,22 +150,5 @@ class Assets {
         return self::$instance;
     } 
 
-
-    public function getManifest() {
-        $manifest_string = file_get_contents(get_template_directory() . '/assets/manifest.json');
-        $manifest_array  = json_decode($manifest_string, true);
-    
-        if(!is_array($manifest_array)) return null;
-    
-        if(array_key_exists($key, $manifest_array)) {
-            return $manifest_array[$key];
-        }   
-        
-        if(WP_ENV == "development") {
-            // throw new ErrorException('Array key ' . $key .' doesnt exist in manifest.json');
-        }
-    
-        return false;
-    }
 
 }
