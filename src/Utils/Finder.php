@@ -28,7 +28,7 @@ class Finder {
     /**
      * getInstance
      *
-     * @return void
+     * @return 
      */
     public static function getInstance() {
         if(!self::$instance) {
