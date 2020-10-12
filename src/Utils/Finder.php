@@ -55,13 +55,13 @@ class Finder {
      */
     public function require($file) {
         if(! $this->fileExists($file) ) {
-            throw new ConfigFileNotException(APP.'config.php');
+            throw new ConfigFileNotException($file);
         }
         
         $config =  require($file);
         
         if(! is_array($config)) {
-            throw new ConfigIsNotArrayException(APP.'config.php');
+            throw new ConfigIsNotArrayException($file);
         }
 
         return $config;

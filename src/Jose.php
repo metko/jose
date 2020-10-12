@@ -4,24 +4,25 @@ namespace Jose;
 
 use ErrorException;
 use Jose\Core\Exceptions\DependencyMissingException;
+use Timber\Timber;
 
 class Jose {
 
     private static $instance = null;
+
+    public $context = null;
     
     /**
      * If the app has already been inited
      *
-     * @var bool
      */
-    private $site = false;
+    private $site = null;
     
     
     
     /**
      * Init the global package and register all the dependencies
      *
-     * @return Timber object
      */
     public function init() {
 
@@ -38,7 +39,6 @@ class Jose {
     /**
      * getSite
      *
-     * @return void
      */
     public function getSite() {
         if( ! $this->site) {
@@ -60,11 +60,13 @@ class Jose {
     /**
      * Get  the instance og the site
      *
-     * @return void
      */
     public static function site() {
         return self::getInstance()->getSite();
     }
+
+
+    
     
         
     /**
@@ -85,6 +87,7 @@ class Jose {
         
         return self::$instance;
     }
+
 
 
 }

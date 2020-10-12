@@ -18,7 +18,9 @@ class Views {
         //maybe it
         if( !$views ) {
             $views = ROOT."app/views";
-        } 
+        } else {
+            $views = ROOT.$views;
+        }
 
         Timber::$locations = $views;
     }

@@ -7,15 +7,14 @@ use Jose\Assets;
  *
  * @since 1.0.0
  *
- * @param $key
+ * @param $assets
  *
- * @return string
+ * @return String
  */
 function asset($asset)
 {       
     return Assets::getInstance()->assetPath($asset);
 }
-
 
 /**
  * Return random string
@@ -23,7 +22,7 @@ function asset($asset)
  * @since 1.9.0
  *
  * @param int $length
- * @return void
+ * @return String
  */
 function random_string($length)
 {

@@ -50,9 +50,12 @@ class App extends  \Timber\Site {
         (new Context())->init();
 
         // *****************    
-        // Create default contet
+        // Create default context
         Assets::getInstance()->init();
 
+        $whoops = new \Whoops\Run;
+        $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
+        $whoops->register();
       
         
         // merge the two file to get the last key in $config
@@ -65,6 +68,32 @@ class App extends  \Timber\Site {
 
         // add the end, build the app
      
+    }
+
+
+
+    
+
+    /**
+     * Get  the instance og the site
+     *
+     * @return void
+     */
+    public function context(Array $array =  [] ) {
+        $context = Timber::context();
+        if( count($array)) {
+            foreach($array as $key => $value) {
+                $context[$key] = $value;
+            }
+        }
+
+        $this->context = $context;
+        return $this;
+        
+    }
+
+    public function render($template) {
+        Timber::render($template.'.twig', $this->context);
     }
 
 
