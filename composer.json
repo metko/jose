@@ -1,0 +1,11 @@
+{
+    "name": "metko/jose",
+    "description": "A Bundle for bedrock",
+    "authors": [
+        {
+            "name": "Thomas Moiluiavon",
+            "email": "thomas.m@thewalkingnerds.com"
+        }
+    ],
+    "require": {}
+}
