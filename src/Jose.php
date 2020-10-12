@@ -8,18 +8,19 @@ use Timber\Timber;
 
 class Jose {
 
+    /**
+     * If the app has already been inited
+     *
+     */
     private static $instance = null;
 
-    public $context = null;
-    
     /**
      * If the app has already been inited
      *
      */
     private $site = null;
     
-    
-    
+
     /**
      * Init the global package and register all the dependencies
      *
@@ -44,7 +45,7 @@ class Jose {
         if( ! $this->site) {
             throw new ErrorException('You must init the Jose app first!');
         }
-        return $this->site;
+        return $this->site->init_scope_context();
     }
     
     /**
@@ -64,11 +65,7 @@ class Jose {
     public static function site() {
         return self::getInstance()->getSite();
     }
-
-
-    
-    
-        
+   
     /**
      * Get instance Jose
      *
@@ -87,7 +84,6 @@ class Jose {
         
         return self::$instance;
     }
-
 
 
 }
