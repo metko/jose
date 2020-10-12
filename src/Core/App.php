@@ -13,11 +13,13 @@ use Jose\Utils\Config;
 use Timber\Post;
 use Timber\Timber;
 
-class App extends  \Timber\Site {
+class App {
 
 
-    public function __construct( $site_name_or_id = null ) {
-        new Timber();
+    public function __construct() {
+       // TODO 
+        //new Timber();
+
         // dump('init once');
 
         // *****************    
@@ -53,91 +55,111 @@ class App extends  \Timber\Site {
         // Create default contet
         (new Context())->init();
 
-        // *****************    
-        // Create default context
-        Assets::getInstance()->init();
 
         $whoops = new \Whoops\Run;
         $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
         $whoops->register();
-
-        // Use default class for all post types, except for pages.
-        add_filter( 'Timber\PostClassMap', function() {
-            return ["page" => "\Jose\Models\PageModel"];
-        }, 10, 2 );
-
-      
         
-        // merge the two file to get the last key in $config
+        // *****************    
+        // Register the post type and models
+        (new PostType())->init();
 
+        // *****************    
+        // Create default context
+        Assets::getInstance()->init();
         
-        // helpers
-
-        // load the plugins
-
-
-        // add the end, build the app
-     
+    }
+    
+    /**
+     * Start the query by automatic stuff
+     *
+     * @return self
+     */
+    public function init_scope_context() {
+        $this->context = Timber::context();
+        $this->autoInjectModelToContext();
+        return $this;
+    }
+    
+    /**
+     * return the actual state of the context
+     *
+     * @return array
+     */
+    public function get_context() {
+        return $this->context;
     }
 
     /**
-     * Get  the instance og the site
+     * Pass varibale into the context
      *
-     * @return void
+     * @param  mixed $param1 
+     * @param  mixed $param2
+     * @return self
      */
-    public function context(Array $array =  [] ) {
+    public function pass($param1 = null, $param2 = null) {
 
-        $context = Timber::context();
+        if(!$param1) {
+            return $this;
+        }
+
+        if(is_array($param1)) {
+            $this->addArrayToContext($param1);
+        }else if( isset($param2)) {
+            $this->context[$param1] = $param2;
+        }
+       
+        return $this;
+        
+    }
+    
+    /**
+     * Add an array to the context
+     *
+     * @param  mixed $array
+     * @return null
+     */
+    public function addArrayToContext(Array $array) {
         if( count($array)) {
             foreach($array as $key => $value) {
                 $context[$key] = $value;
             }
         }
+        $this->context = array_merge($this->context, $context);
+    }
 
-        $this->context = $context;
-        $this->getDefaultPostContext();
-        return $this;
+    //TODO
+    /**
+     * Auto inject post model to context
+     * Depending of the current query
+     *
+     * @return void
+     */
+    public function autoInjectModelToContext() {
+
+        if(is_archive()) {
+            // TODO
+            // dump('im a archive');
+            // dump($context);
+        }
+    
+        if(is_singular()) {
+            // TODO
+            // dump('im a page or a single');
+            $singular_post = $this->context['posts'][0];
+            $this->context['post'] = $singular_post;
+            $this->context['wp_title'] = $singular_post->title;
+            // dump($context);
+        }
+
+        if(is_404()) {
+            // TODO
+            // dump('im a page 404');
+            dump($this->context);
+        }
         
     }
 
-
-    public function getDefaultPostContext() {
-        //dd($this->context['posts'][0]->post_type);
-    }
-
-    
-    /**
-     * Retreive the current post
-     *
-     * @return void
-     */
-    public function post(String $modelType = null) {
-
-        // If model type is passed, grab the model associated instead
-        if($modelType) {
-            $this->context['post'] = $this->getPostModel($modelType);
-        }else {
-            $this->context['post'] = new Post();
-        }
-        return $this;
-    }
-
-     /**
-     * Retreive the current post
-     *
-     * @return void
-     */
-    public function page(String $modelType = null) {
-
-        // If model type is passed, grab the model associated instead
-        if($modelType) {
-            $this->context['post'] = $this->getPostModel($modelType);
-        }else {
-            $this->context['page'] = new PageModel();
-        }
-
-        return $this;
-    }
     
     /**
      * Use Timber render function to output twig file, with context and cache
@@ -146,8 +168,6 @@ class App extends  \Timber\Site {
      * @return 
      */
     public function render(String $template) {
-        
-
         Timber::render($template.'.twig', $this->context);
     }
 
