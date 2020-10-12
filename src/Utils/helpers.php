@@ -1,19 +1,6 @@
 <?php
 
-function getManifest($key) {
-    $manifest_string = file_get_contents(get_template_directory() . '/assets/manifest.json');
-    $manifest_array  = json_decode($manifest_string, true);
-
-    if(array_key_exists($key, $manifest_array)) {
-        return $manifest_array[$key];
-    }   
-    
-    if(WP_ENV == "development") {
-        // throw new ErrorException('Array key ' . $key .' doesnt exist in manifest.json');
-    }
-
-    return false;
-}
+use Jose\Assets;
 
 /**
  * Return url of compiled style or script file
@@ -24,13 +11,9 @@ function getManifest($key) {
  *
  * @return string
  */
-function assets($key)
+function asset($asset)
 {       
-
-    if(getManifest($key)) {
-        return get_stylesheet_directory_uri() . '/assets' . getManifest($key);
-    }
-    return null;
+    return Assets::getInstance()->assetPath($asset);
 }
 
 
