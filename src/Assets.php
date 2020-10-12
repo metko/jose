@@ -2,7 +2,9 @@
 
 namespace Jose;
 
+use Jose\Core\Exceptions\ManifestAssetsNotFound;
 use Jose\Utils\Config;
+use Jose\Utils\Finder;
 
 class Assets {
 
@@ -16,6 +18,14 @@ class Assets {
      * @return void
      */
     public function init() {
+        $this->config = Config::getInstance()->get("assets");
+
+        if(Finder::getInstance()->fileExists(get_template_directory() . '/assets/manifest.json')) {
+            $this->manifest = file_get_contents(get_template_directory() . '/assets/manifest.json');
+        }else {
+            throw new ManifestAssetsNotFound();
+        }
+
         add_action('wp_enqueue_scripts', [$this, 'registerMainScripts']);
     }
     
@@ -26,12 +36,11 @@ class Assets {
      * @return void
      */
     function loadDefaultScript($type) {
-        
         // get main css file name
-        if(Config::getInstance()->get("assets")) {
+        if($this->config) {
 
-            foreach(Config::getInstance()->get("assets") as $assets) {
-             ;
+            foreach($this->config as $assets) {
+                dump($this->config);
                 foreach($assets as $asset) {
                     $this->$type($asset);
                 }
@@ -113,5 +122,23 @@ class Assets {
         }
         return self::$instance;
     } 
+
+
+    public function getManifest() {
+        $manifest_string = file_get_contents(get_template_directory() . '/assets/manifest.json');
+        $manifest_array  = json_decode($manifest_string, true);
+    
+        if(!is_array($manifest_array)) return null;
+    
+        if(array_key_exists($key, $manifest_array)) {
+            return $manifest_array[$key];
+        }   
+        
+        if(WP_ENV == "development") {
+            // throw new ErrorException('Array key ' . $key .' doesnt exist in manifest.json');
+        }
+    
+        return false;
+    }
 
 }
