@@ -32,7 +32,7 @@ class Jose {
             throw new ErrorException('App jose already inited!');
         }
 
-        $this->site = new \Jose\Core\App( null );
+        $this->site = new \Jose\Core\App();
         // return $this;
 
     }
@@ -45,7 +45,7 @@ class Jose {
         if( ! $this->site) {
             throw new ErrorException('You must init the Jose app first!');
         }
-        return $this->site->init_scope_context();
+        return $this->site;
     }
     
     /**
@@ -73,7 +73,6 @@ class Jose {
      */
     public static function getInstance() {
         if( ! self::$instance ) {
-
             if(! class_exists('\Timber\Timber') ) {
                 throw new DependencyMissingException("Timber\Timber");
             }

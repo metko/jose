@@ -14,13 +14,11 @@ use Timber\Post;
 use Timber\Timber;
 
 class App {
-
+    
+    public $context = [];
 
     public function __construct() {
-       // TODO 
-        //new Timber();
-
-        // dump('init once');
+   
 
         // *****************    
         // Load the constants
@@ -55,7 +53,7 @@ class App {
         // Create default contet
         (new Context())->init();
 
-
+        // TODO Reset choose a way to handle the error template
         $whoops = new \Whoops\Run;
         $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
         $whoops->register();
@@ -63,7 +61,6 @@ class App {
         // *****************    
         // Register the post type and models
         (new PostType())->init();
-
         // *****************    
         // Create default context
         Assets::getInstance()->init();
@@ -71,23 +68,13 @@ class App {
     }
     
     /**
-     * Start the query by automatic stuff
-     *
-     * @return self
-     */
-    public function init_scope_context() {
-        $this->context = Timber::context();
-        $this->autoInjectModelToContext();
-        return $this;
-    }
-    
-    /**
-     * return the actual state of the context
+     * Return the actual state of the context
+     * Timber context + Jose context
      *
      * @return array
      */
     public function get_context() {
-        return $this->context;
+        return array_merge(Timber::context(), $this->context);
     }
 
     /**
@@ -102,13 +89,11 @@ class App {
         if(!$param1) {
             return $this;
         }
-
         if(is_array($param1)) {
             $this->addArrayToContext($param1);
         }else if( isset($param2)) {
             $this->context[$param1] = $param2;
         }
-       
         return $this;
         
     }
@@ -128,6 +113,21 @@ class App {
         $this->context = array_merge($this->context, $context);
     }
 
+    
+    
+    /**
+     * Use Timber render function to output twig file, with context and cache
+     *
+     * @param  mixed $template
+     * @return 
+     */
+    public function render(String $template) {
+        // merge the 2
+        $this->context = $this->get_context();
+        $this->autoInjectModelToContext();
+        Timber::render($template.'.twig', $this->context);
+    }
+
     //TODO
     /**
      * Auto inject post model to context
@@ -141,7 +141,9 @@ class App {
             // TODO
             // dump('im a archive');
             // dump($context);
+            $this->context['post']['post_title'] = $this->context['wp_title'];
         }
+        
     
         if(is_singular()) {
             // TODO
@@ -155,23 +157,36 @@ class App {
         if(is_404()) {
             // TODO
             // dump('im a page 404');
-            dump($this->context);
+            // dump($this->context);
         }
         
     }
 
-    
     /**
-     * Use Timber render function to output twig file, with context and cache
+     * Get a new post with the and model associated
+     * Leave empty to get the post default
      *
-     * @param  mixed $template
-     * @return 
+     * @param  mixed $model
+     * @return void
      */
-    public function render(String $template) {
-        Timber::render($template.'.twig', $this->context);
+    public function getPost(Int $id = null, String $model ) {
+        $class = $this->getClassModelName($model);
+        
+        // Check if the class exists
+        if(class_exists($class)) {
+            
+            // TODO: Refactor with ID arg
+            if($id) {
+                return new $class($id);
+            }else {
+                return new $class();
+            }
+            
+        }else {
+            throw new ClassNotFoundException($class);
+        }
     }
 
-    
     /**
      * Get the class model name with the config object
      *
@@ -189,36 +204,5 @@ class App {
         // generate the good one
         return  $path.$model.'Model';
     }
-
-
-    /**
-     * Get the model of your choise by passing the name of the post type
-     * Leave empty to get the post default
-     *
-     * @param  mixed $model
-     * @return void
-     */
-    public function getPostModel(String $model, Int $id = null) {
-        
-        $class = $this->getClassModelName($model);
-
-        // Check if the class exists
-        if(class_exists($class)) {
-
-            // TODO: Refactor with ID arg
-            if($id) {
-                return new $class($id);
-            }else {
-                return new $class();
-            }
-
-        }else {
-            throw new ClassNotFoundException($class);
-        }
-    }
-
-
-
-  
 
 }
