@@ -2,17 +2,35 @@
 
 namespace Jose\Models;
 
+use Jose\Models\Traits\Hooks;
 use Jose\Utils\Config;
 use Timber\Post;
 
 class Model extends Post {
+
+    use Hooks;
     
     /**
      * The locak key for translation
      *
      * @var undefined
      */
-    public $local_key = null;    
+    public $local_key = null;   
+
+    /**
+     * Define or nor if we want to use the hooks auto
+     *
+     * @var undefined
+     */
+    public $autoHooks = true;   
+    
+        
+    /**
+     * Post ID
+     *
+     * @var undefined
+     */
+    public $ID = null;
     
     /**
      * The unique name
@@ -77,6 +95,7 @@ class Model extends Post {
     public function __construct($id = null) {
         // Contrtruct to init the timber model aswell
         parent::__construct($id);
+        $this->ID = $id;
     }
     
     /**
@@ -134,6 +153,10 @@ class Model extends Post {
 
         // hooks after register post type
         $this->afterRegister();
+        
+        if($this->autoHooks) {
+            $this->registerHooks();
+        }
     }
     
     
@@ -169,20 +192,6 @@ class Model extends Post {
         ];
     }
 
-     /**
-     * Custom hookds to execute before the register methods
-     *
-     */
-    public function beforeRegister() {
-        
-    }
-    
-    /**
-     * Custom hookds to execute after the register methods
-     *
-     */
-    public function afterRegister() {
 
-    }
 
 }
