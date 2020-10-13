@@ -59,8 +59,11 @@ class App {
         $whoops->register();
         
         // *****************    
-        // Register the post type and models
+        // Register the post type/taxonomies/terms and models
         (new PostType())->init();
+        (new Taxonomies())->init();
+        // Activate the postclass og all class
+        PostClassMap::getInstance()->apply();
         // *****************    
         // Create default context
         Assets::getInstance()->init();
@@ -125,6 +128,7 @@ class App {
         // merge the 2
         $this->context = $this->get_context();
         $this->autoInjectModelToContext();
+        // dd($this->context);
         Timber::render($template.'.twig', $this->context);
     }
 
