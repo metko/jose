@@ -3,6 +3,6 @@
 namespace Jose\Models;
 
 
-class PostModel extends Model {
+class TaxonomyModel extends Model {
     
 }

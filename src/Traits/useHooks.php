@@ -1,8 +1,8 @@
 <?php
 
-namespace Jose\Models\Traits;
+namespace Jose\Traits;
 
-Trait Hooks {
+Trait useHooks {
     
     /**
      * Register the basics hooks

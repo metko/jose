@@ -7,27 +7,20 @@ use Jose\Core\Exceptions\ClassNotFoundException;
 use Jose\Traits\useRegisterPost;
 use Jose\Utils\Config;
 
-class PostType {
-        
+class Taxonomies {
+    
     use useRegisterPost;
 
-    /**
-     * config
-     *
-     * @var array
-     */
-    public $config = [];    
-    
+    public $type = "taxonomies";
+
     /**
      * post_types
      *
      * @var array
      */
-    public $post_types = [];    
+    public $taxonomies = [];   
 
-    public $type = "post_types";
-    
-    
+
     /**
      * __construct
      *
@@ -39,12 +32,11 @@ class PostType {
         // Get the models key in config.php
         $this->config = Config::getInstance()->get("models");
 
-       
-        $this->post_types =  $this->config['post_model'] ? $this->config['post_model'] : []; 
-        
+        $this->taxonomies = $this->config['taxonomies_model'] ? $this->config['taxonomies_model'] : [];
+         
     }
 
-      
+           
  
    
 }
