@@ -1,12 +1,12 @@
 <?php
 
-namespace Jose\Models;
+// namespace Jose\Models;
 
 use Jose\Traits\useHooks;
 use Jose\Utils\Config;
 use Timber\Post;
 
-class Model extends Post {
+class ModelCopie extends Post {
 
     use useHooks;
     
