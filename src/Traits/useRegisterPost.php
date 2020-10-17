@@ -66,12 +66,15 @@ Trait useRegisterPost {
         
         // Check if the key name is set, it's required
         if( ! array_key_exists("unique_name", $post) || !$post['unique_name']) {
-            throw new ErrorException("Key 'name' doesnt exist in the declaration of the taxonomy"); 
+            throw new ErrorException("Key 'unique_name' doesnt exist in the declaration of the post"); 
         }
 
         $class = $post['model'];
         if(! $class ) {
+
+            // selon le type il faut charger un model par default different
             $class= "\Jose\Models\TaxonomyModel";
+            
         }else {
             if(! class_exists($class)) {
                 if($this->type == "post_types") {
