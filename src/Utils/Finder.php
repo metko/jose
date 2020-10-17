@@ -44,7 +44,7 @@ class Finder {
      * @param  mixed $file
      * @return void
      */
-    public function fileExists($file) {
+    public function file_exists($file) {
         return $this->fileSystem->exists($file);
     }
     
@@ -55,9 +55,7 @@ class Finder {
      * @return void
      */
     public function require($file) {
-        if(! $this->fileExists($file) ) {
-            throw new ConfigFileNotException($file);
-        }
+       
         
         $config =  require($file);
         
