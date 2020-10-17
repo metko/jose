@@ -28,3 +28,22 @@ function random_string($length)
 {
     return substr(bin2hex(random_bytes($length)), 0, $length);
 }
+
+
+/**
+ * Convert a path into a namespace 
+ *
+ * @param  string $path
+ * @return string
+ */
+function pathToNamespace(string $path) :string
+{
+    $namespaceArray = explode('/', $path);
+    $namespacePath = "\\";
+    foreach($namespaceArray as $key) {
+        $namespacePath .= ucfirst($key);
+        $namespacePath .= "\\";
+    }
+
+    return $namespacePath;
+}
