@@ -29,6 +29,7 @@ return [
     |
     */    
     'views_path' => "app/views",
+    // 'context_path' => "app/context.php",
 
 
     // Create spots name for menu and, assign page on the bo abnd call them with 
@@ -46,6 +47,8 @@ return [
     'menus' => [
         'main_menu' => "Main menu"
     ],
+
+    'image_size' => [],
 
     /*
     |--------------------------------------------------------------------------

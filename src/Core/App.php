@@ -28,11 +28,10 @@ class App {
         // Load Configuration file
         Config::getInstance()->init();
 
-        // *****************    
-        // Define the cache policy
-        (new CacheHandler())->init();
+        // // *****************    
+        // // Define the cache policy
+        // (new CacheHandler())->init();
 
-    
         // *****************    
         // Init theme configuration
         (new Theme())->init();
@@ -49,20 +48,20 @@ class App {
         // Create default contet
         (new Context())->init();
 
-        // TODO Reset choose a way to handle the error template
-        $whoops = new \Whoops\Run;
-        $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
-        $whoops->register();
+        // // TODO Reset choose a way to handle the error template
+        // $whoops = new \Whoops\Run;
+        // $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
+        // $whoops->register();
         
-        // *****************    
-        // Register the post type/taxonomies/terms and models
-        (new PostClass())->init();
-        // (new Taxonomies())->init();
-        // Activate the postclass og all class
-        PostClassMap::getInstance()->apply();
-        // *****************    
-        // Create default context
-        Assets::getInstance()->init();
+        // // *****************    
+        // // Register the post type/taxonomies/terms and models
+        // (new PostClass())->init();
+        // // (new Taxonomies())->init();
+        // // Activate the postclass og all class
+        // PostClassMap::getInstance()->apply();
+        // // *****************    
+        // // Create default context
+        // Assets::getInstance()->init();
        
     }
     

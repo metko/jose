@@ -49,7 +49,7 @@ class Config
      * @param  string $key
      * @return array|null
      */
-    public function get($key = null): ?array
+    public function get($key = null)
     {
         if ($key) {
             if (array_key_exists($key, $this->config)) {
