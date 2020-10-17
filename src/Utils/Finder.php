@@ -7,6 +7,7 @@ use Jose\Core\Exceptions\ConfigFileNotException;
 use Jose\Core\Exceptions\ConfigIsNotArrayException;
 use Jose\Core\Exceptions\FileNotException;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder as SymfonyFinder;
 
 class Finder {
 
@@ -22,7 +23,7 @@ class Finder {
      */
     public function __construct() {
         $this->fileSystem = new Filesystem();
-        $this->finder = "";
+        $this->finder = new SymfonyFinder();
     }
     
     /**
@@ -66,5 +67,11 @@ class Finder {
 
         return $config;
     }
+
+    public function getFiles($path) {
+       return $this->finder->files()->in($path);
+    }
+
+    
 
 }
