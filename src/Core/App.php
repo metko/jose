@@ -14,9 +14,8 @@ class App {
     
     public $context = [];
 
-    public function __construct() {
-   
-
+    public function __construct() 
+    {
         // *****************    
         // Load the constants
         require(dirname(__DIR__).'/Utils/constants.php');
@@ -58,13 +57,13 @@ class App {
         // *****************    
         // Register the post type/taxonomies/terms and models
         (new PostClass())->init();
-        (new Taxonomies())->init();
+        // (new Taxonomies())->init();
         // Activate the postclass og all class
         PostClassMap::getInstance()->apply();
         // *****************    
         // Create default context
         Assets::getInstance()->init();
-        
+       
     }
     
     /**
@@ -73,7 +72,8 @@ class App {
      *
      * @return array
      */
-    public function get_context() {
+    public function get_context() 
+    {
         return array_merge(Timber::context(), $this->context);
     }
 
@@ -84,7 +84,8 @@ class App {
      * @param  mixed $param2
      * @return self
      */
-    public function pass($param1 = null, $param2 = null) {
+    public function pass($param1 = null, $param2 = null) 
+    {
 
         if(!$param1) {
             return $this;
@@ -104,7 +105,8 @@ class App {
      * @param  mixed $array
      * @return null
      */
-    public function addArrayToContext(Array $array) {
+    public function addArrayToContext(Array $array) 
+    {
         if( count($array)) {
             foreach($array as $key => $value) {
                 $context[$key] = $value;
@@ -113,15 +115,14 @@ class App {
         $this->context = array_merge($this->context, $context);
     }
 
-    
-    
     /**
      * Use Timber render function to output twig file, with context and cache
      *
      * @param  mixed $template
      * @return 
      */
-    public function render(String $template) {
+    public function render(String $template) 
+    {
         // merge the 2
         $this->context = $this->get_context();
         $this->autoInjectModelToContext();
@@ -136,7 +137,8 @@ class App {
      *
      * @return void
      */
-    public function autoInjectModelToContext() {
+    public function autoInjectModelToContext() 
+    {
 
         if(is_archive()) {
             // TODO
@@ -170,7 +172,8 @@ class App {
      * @param  mixed $model
      * @return void
      */
-    public function getPost(Int $id = null, String $model ) {
+    public function getPost(Int $id = null, String $model ) 
+    {
         $class = $this->getClassModelName($model);
         
         // Check if the class exists
@@ -193,7 +196,8 @@ class App {
      *
      * @return void
      */
-    public function getClassModelName($model) {
+    public function getClassModelName($model) 
+    {
         // Get config key model
         $config = Config::getInstance()->get('models');
 
