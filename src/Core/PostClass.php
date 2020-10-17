@@ -1,6 +1,9 @@
 <?php
 
 namespace Jose\Core;
+
+use ErrorException;
+use Jose\Core\Exceptions\ErrorsExceptions;
 use Jose\Utils\Config;
 use Jose\Utils\Finder;
 
@@ -20,7 +23,7 @@ class PostClass {
      *
      * @var array
      */
-    public $post_types = [];    
+    public $post_type_path = null;    
 
     public $type = "post_types";
     
@@ -32,47 +35,66 @@ class PostClass {
      */
     public function __construct() 
     {
-
-        // ****************
-        // Get the models key in config.php
-        $this->config = Config::getInstance()->get("models");
-        //$this->post_types =  $this->config['post_model'] ? $this->config['post_model'] : []; 
-        
+        if(! $this->post_type_path = Config::getInstance()->get("post_type_path") ) {
+            $this->post_type_path = 'app/PostType';
+        }
     }
 
 
     public function init() 
     {
         
-        // get the file in the folder
-        $path = Config::getInstance()->get("post_type_path");
-
-        if(!$path) {
-            $path = 'app/PostType';
-        }
-
-
-        $files = Finder::getInstance()->getFiles(ROOT.$path);
-        $namespaceArray = explode('/', $path);
-        $namespacePath = "\\";
-        foreach($namespaceArray as $key) {
-            $namespacePath .= ucfirst($key);
-            $namespacePath .= "\\";
-        }
-        //$namespacePath = join('\\', $namespaceArray);
-        foreach ($files as $file) {
-
-            $absoluteFilePath = $file->getRealPath();
-            $fileNameWithExtension = $file->getRelativePathname();
-            $className = explode('.', $fileNameWithExtension)[0];
-            //equire_once($absoluteFilePath);
-            $className = $namespacePath . $className;
-            dump($className);
-            $className::register_post_type();
-            // ...
-        }
+        
+        $this->regiser_posts_types($this->post_type_path);
+        // Foreach file find into the folder path
+        
         dd();
+    }
 
+    
+    /**
+     * regiser_posts_types
+     *
+     * @param  mixed $path
+     * @return void
+     */
+    private function regiser_posts_types(string $path) :void 
+    {
+        foreach ( Finder::getInstance()->getFiles(ROOT.$path) as $file ) {
+
+            // Get file path
+            $file_path = $file->getRelativePathname();
+
+            // Convert into a class namespace accessible
+            $class_name = pathToNamespace($path) . explode('.', $file_path)[0];
+
+            // Then register the post type
+            $class_name::register_post_type();
+
+            // If a post_model it's use, register it
+            if( property_exists( $class_name, "post_model" ) ) {
+                $this->register_post_model($class_name);
+            }
+        }
+    }
+
+    
+    /**
+     * register_post_model
+     *
+     * @param  string $class_name
+     * @return void
+     */
+    private function register_post_model (string $class_name) :void
+    {
+        $class_model = $class_name::$post_model;
+
+        if( ! class_exists($class_model)) {
+            throw new ErrorException('Model doesnt exists');
+        }
+
+        // auto generate class model
+        PostClassMap::getInstance()->add([$class_name::$name => $class_name::$post_model]);
     }
 
       
