@@ -7,10 +7,7 @@ use Jose\Core\CacheHandler;
 use Jose\Core\Exceptions\ClassNotFoundException;
 use Jose\Core\Theme\RegisterMenu;
 use Jose\Core\Theme\Theme;
-use Jose\Models\Page;
-use Jose\Models\PageModel;
 use Jose\Utils\Config;
-use Timber\Post;
 use Timber\Timber;
 
 class App {
@@ -60,7 +57,7 @@ class App {
         
         // *****************    
         // Register the post type/taxonomies/terms and models
-        (new PostType())->init();
+        (new PostClass())->init();
         (new Taxonomies())->init();
         // Activate the postclass og all class
         PostClassMap::getInstance()->apply();
