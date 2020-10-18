@@ -1,28 +1,27 @@
 # Jose
 
-> A magic php library for building wordpress theme
+> A  php library for building wordpress themes
 
 ## What is it
 
-Jose is a php package for [Bedrock](https://roots.io/bedrock/). He's here to help you build themes easely, quickly and efficiently. So, first, make sure we had installed [Bedrock](https://roots.io/bedrock/) correctly. You can use this docker-compose configuration if needed.
+Jose is a php package for wordpress application. He combines very well with [Bedrock](https://roots.io/bedrock/) or Wordplate stack like. He's here to help you build themes easly, quickly and efficiently. So, first, make sure you had composer installed and let's start. (You can use this docker-compose configuration if needed).
 
 ## Features
- - Twig 
- - Models for posts/page
- - Autoloading models
- - Faster than just bedorck
- - Assets component
- - Easy Guttenberg block creation
- - Easy post type and taxonomy
- - No more need to save permalink again !
+ - Simple post type and taxonomy creation
+ - Hooks implementation
+ - Models auto loading 
+ - Easy assets registration
+ - Guttenberg block creation
+ - Timber integration
+ - Clean starter theme
+ - Most popular wp plugins configuration provided
  - Errors catching with Whoops
  - etc...
 
 ## Library
-Jose use Timber for managing posts, page and your views. It comes also with some tools from Symfony components such as a Finder and a debugger. You probably should use a npm package to dealing with assets like scss file and js like this :
+Jose use Timber for managing posts, page and your views. It comes also with some tools from Symfony components such as a Finder and a debugger. You probably should use a npm package to dealing with assets like scss, browsersync or hmr
 
 ## Requirements:
 > - Composer
 > - php > 7.2
-> - Bedrock
-
+> - Wordpress > 5.0.0
