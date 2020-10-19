@@ -1,65 +1,32 @@
-
-
 # Configuration
 
-Before you start using Jose, let's make some configuration:
+Jose comes with a built in configuration that you an find [here]('#'). He's assuming that you have a `/app` folder at your root web project, but if you want, this can be change into your config file.
 
-### Assets
+## Custom configuration
 
-You can configure the differents assets you want to pass to your theme. We will assume that you wil store your assets in an `assets` folder in your theme.
-Just pass the name of the foler you want to use: 
-```php
-'assets' => [
-    'css' => [
-        'app.css',
-        'app2.css',
-        // ...etc
-    ],
-    'js' => [
-        'app.js',
-        // ...etc
-    ],
-]
-```
+You have two way to provide a custom config:
 
-> If you leave the key empty, it wil bring by default a css and js file respectivly called `app.css` ans `app.js`
-
-You can pass the option use_manifest by giving `manifest.json` name placed into the assets folder. You can use a package like Symfony encore to build this with ease.
- ```php
-'assets' => [
-    "use_manifest" => "manifest.json"
-]
-```
-### Views
-
-Use can change the default folder of the views by passing an absolute path from your root folder.
-
- ```php
-'views_path' => "app/views",
-```
-
-### Caching
-
-For caching, Jose uses the build in system provide by twig. You enable or disable it for your differents environments. 
-It's also possible to change the folder of the cached views file. 
-
-> More on caching process on the context section and rendering.
+## Passing array
+You can pass an array into the config method of jose to erase the default one and provide your owns. The best place to init a new config is in your `functions.php` of your theme.
 
 ```php
-'cache' => [
-    "in_production" => true,
-    "in_development" => false,
-    "location" => "app/views/_cached",
-],
+// functions.php
+\Jose\Jose::config([
+    'cache' => true,
+    'wiew_path' => '/my/new/view/path'
+])
 ```
 
-### Local key
-
-Local key will be used for generating translation of your wordpress menu. It will be passed each time in your global context, so like this you can't miss a traduction.
+## Passing file config path
+Passing an file path relative to your webroot folder.
 
 ```php
-"local_key" => "jose",
+// functions.php
+\Jose\Jose::config("/conf/my_conf.php")
 ```
+> TODO: Add support to yml and json type file.
+
+> By default, Jose will look into an app folder and check for existence of a `config.php`, and merge it with the default one.
 
 
 

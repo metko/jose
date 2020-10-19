@@ -4,6 +4,7 @@ namespace Jose;
 
 use ErrorException;
 use Jose\Core\Exceptions\DependencyMissingException;
+use Jose\Utils\Config;
 use Timber\Timber;
 
 class Jose {
@@ -15,75 +16,43 @@ class Jose {
     private static $instance = null;
 
     /**
-     * If the app has already been inited
+     * Get  the instance of the global app
      *
      */
-    private $site = null;
-    
-
-    /**
-     * Init the global package and register all the dependencies
-     *
-     */
-    public function init() {
-
-        // use a config object
-        if( $this->site) {
-            throw new ErrorException('App jose already inited!');
-        }
-
-        $this->site = new \Jose\Core\App( null );
-        // return $this;
-
-    }
-    
-    /**
-     * getSite
-     *
-     */
-    public function getSite() {
-        if( ! $this->site) {
-            throw new ErrorException('You must init the Jose app first!');
-        }
-        return $this->site->init_scope_context();
-    }
-    
-    /**
-     * Static site
-     * Return a instance of the global Jose package
-     * 
-     * @return $instance
-     */
-    public static function app() {
-        return self::getInstance();
-    }
-    
-    /**
-     * Get  the instance og the site
-     *
-     */
-    public static function site() {
-        return self::getInstance()->getSite();
-    }
-   
-    /**
-     * Get instance Jose
-     *
-     * @return \Jose\Jose
-     */
-    public static function getInstance() {
-        if( ! self::$instance ) {
-
-            if(! class_exists('\Timber\Timber') ) {
-                throw new DependencyMissingException("Timber\Timber");
+    public static function app(): \Jose\Core\App
+    {
+        if( ! self::$instance) {
+            // need to check
+            if(self::checkRequirments() ) {
+                self::$instance = new \Jose\Core\App();
             }
-
-            self::$instance = new Jose();
-
+            
         }
-        
         return self::$instance;
     }
 
+    public static function config($config)
+    {
+        return Config::getInstance()->define($config);
+    }
+
+    public static function get_config($key = null)
+    {
+        return Config::getInstance()->get($key);
+    }
+    
+
+    /**
+     * Check all the necessary php version, lib etc here....
+     *
+     * @return bool
+     */
+    private static function checkRequirments(): ?bool
+    {
+        if ( ! class_exists('\WP') ) {
+            throw new ErrorException('You need wordpress to use Jose. Sorry...');
+        }
+        return true;
+    }
 
 }

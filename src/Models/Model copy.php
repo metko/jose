@@ -1,18 +1,35 @@
 <?php
 
-namespace Jose\Models;
+// namespace Jose\Models;
 
+use Jose\Traits\useHooks;
 use Jose\Utils\Config;
 use Timber\Post;
 
-class Model extends Post {
+class ModelCopie extends Post {
+
+    use useHooks;
     
     /**
      * The locak key for translation
      *
      * @var undefined
      */
-    public $local_key = null;    
+    public $local_key = null;   
+
+    /**
+     * Define or nor if we want to use the hooks auto
+     *
+     * @var undefined
+     */
+    public $hooks = false;   
+      
+    /**
+     * Post ID
+     *
+     * @var undefined
+     */
+    // public $ID = null;
     
     /**
      * The unique name
@@ -50,7 +67,7 @@ class Model extends Post {
      */
     public $menu_labels = [];
 
-    public $arguments = [
+    public $argumentsPostType = [
         'labels' => null,
         'description' => '',
         'public' => true,
@@ -67,6 +84,16 @@ class Model extends Post {
         'supports' => ['title', 'page-attributes', 'thumbnail','revisions', 'editor', 'excerpt']
     ];
 
+    public $argumentsTaxonomies = [
+        'labels' => null,
+        'hierarchical' => true,
+        'show_ui' => true,
+        'show_in_rest' => true,
+        'show_admin_column' => true,
+        'update_count_callback' => '_update_post_term_count',
+        'query_var' => true,
+    ];
+
 
     /**
      * Get the local key
@@ -77,6 +104,7 @@ class Model extends Post {
     public function __construct($id = null) {
         // Contrtruct to init the timber model aswell
         parent::__construct($id);
+        // $this->ID = $id;
     }
     
     /**
@@ -110,7 +138,8 @@ class Model extends Post {
      * 
      * Kind of init function
      */
-    public function register_post_type($post) {
+    public function register_post_types($post) {
+
 
         // Get the local key for all the translation
         $this->local_key = Config::getInstance()->get('local_key');
@@ -122,18 +151,57 @@ class Model extends Post {
         $this->menu_labels = $this->generateLabelsPostType();
 
         // Set the final array object
-        $this->arguments['labels'] = $this->menu_labels;
-        $this->arguments['rewrite']= ['slug' => $this->post_type_slug, 'with_front' => true ];
-        $this->arguments['description']= "Post type description";
+        $this->argumentsPostType['labels'] = $this->menu_labels;
+        $this->argumentsPostType['rewrite']= ['slug' => $this->post_type_slug, 'with_front' => true ];
+        $this->argumentsPostType['description']= "Post type description";
 
         // Hooks before register post type
         $this->beforeRegister();
 
         //register
-        register_post_type($this->unique_name, $this->arguments);
+        register_post_type($this->unique_name, $this->argumentsPostType);
 
         // hooks after register post type
         $this->afterRegister();
+        
+        if($this->autoHooks) {
+            $this->registerHooks();
+        }
+    }
+
+    /**
+     * Register the post type
+     * 
+     * Kind of init function
+     */
+    public function register_taxonomies($post) {
+        
+        // Get the local key for all the translation
+        $this->local_key = Config::getInstance()->get('local_key');
+        
+        // Define the global name and plural name
+        $this->setPostTypeName($post);
+
+        // Generate the label
+        $this->menu_labels = $this->generateLabelsTaxonomies();
+
+        // Set the final array object
+        $this->argumentsTaxonomies['labels'] = $this->menu_labels;
+        $this->argumentsTaxonomies['rewrite']= ['slug' => $this->post_type_slug, 'with_front' => true ];
+        $this->argumentsTaxonomies['description']= "Taxonomies description";
+
+        // Hooks before register post type
+        $this->beforeRegister();
+        // dd($this->argumentsTaxonomies);
+        //register
+        register_taxonomy($this->unique_name, $post['post_types'] ,$this->argumentsTaxonomies);
+
+        // hooks after register post type
+        $this->afterRegister();
+        
+        if($this->hooks) {
+            $this->registerHooks();
+        }
     }
     
     
@@ -169,20 +237,41 @@ class Model extends Post {
         ];
     }
 
-     /**
-     * Custom hookds to execute before the register methods
-     *
-     */
-    public function beforeRegister() {
-        
-    }
-    
     /**
-     * Custom hookds to execute after the register methods
+     * Generate the post type label 
      *
+     * @return array
      */
-    public function afterRegister() {
+    public function generateLabelsTaxonomies(){
+
+        // If the menus label has been set in the child model
+        // use it instead
+        if(count($this->menu_labels)) {
+            return $this->menu_labels;
+        }
+
+        return  [
+            'name'                       => _x( ucFirst($this->public_plural_name), 'Post type general name', $this->local_key ),
+            'singular_name'              => _x( ucFirst($this->public_name), 'Post type singular name', $this->local_key ),
+            'search_items'               => __('Search '.$this->public_plural_name, $this->local_key),
+            'popular_items'              => __('Popular '.$this->public_plural_name, $this->local_key),
+            'all_items'                  => __('All '.$this->public_plural_name, $this->local_key),
+            'parent_item'                => null,
+            'parent_item_colon'          => null,
+            'edit_item'                  => __('Edit '.$this->public_name, $this->local_key ),
+            'update_item'                => __('Update '.$this->public_name, $this->local_key ),
+            'add_new_item'               => __('Add new '.$this->public_name, $this->local_key ),
+            'new_item_name'              => __('New '.$this->public_name.' name', $this->local_key ),
+            'separate_items_with_commas' => __( 'Separate '.$this->public_plural_name.' with commas', $this->local_key ),
+            'add_or_remove_items'        => __( 'Separate '.$this->public_plural_name.' with commas', $this->local_key ),
+            'choose_from_most_used'      => __( 'Separate '.$this->public_plural_name.' with commas', $this->local_key ),
+            'choose_from_most_used'      => __( 'Choose from the most used '.$this->public_plural_name, $this->local_key ),
+            'menu_name'                  => _x( ucFirst($this->public_plural_name) , 'admin menu', $this->local_key ),
+        
+        ];
 
     }
+
+
 
 }
