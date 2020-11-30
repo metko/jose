@@ -35,7 +35,7 @@ class App {
         // *****************    
         // Init theme configuration
         (new Theme())->init();
-
+        
         // *****************    
         // Register the differents menus
         (new RegisterMenu())->init();
@@ -55,7 +55,8 @@ class App {
         
         // // *****************    
         // // Register the post type/taxonomies/terms and models
-        // (new PostClass())->init();
+        (new PostClass())->init();
+        
         // // (new Taxonomies())->init();
         // // Activate the postclass og all class
         // PostClassMap::getInstance()->apply();

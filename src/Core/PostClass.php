@@ -21,7 +21,6 @@ class PostClass {
     /**
      * post_types
      *
-     * @var array
      */
     public $post_type_path = null;    
 
@@ -44,11 +43,10 @@ class PostClass {
     public function init() 
     {
         
-        
         $this->regiser_posts_types($this->post_type_path);
         // Foreach file find into the folder path
         
-        dd();
+      
     }
 
     
@@ -70,9 +68,10 @@ class PostClass {
 
             // Then register the post type
             $class_name::register_post_type();
-
+            
             // If a post_model it's use, register it
             if( property_exists( $class_name, "post_model" ) ) {
+               
                 $this->register_post_model($class_name);
             }
         }
@@ -90,7 +89,7 @@ class PostClass {
         $class_model = $class_name::$post_model;
 
         if( ! class_exists($class_model)) {
-            throw new ErrorException('Model doesnt exists');
+            throw new ErrorException('Model '. $class_name::$post_model .' doesnt exists');
         }
 
         // auto generate class model

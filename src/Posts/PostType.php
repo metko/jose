@@ -19,6 +19,7 @@ class PostType extends Post {
      */
     public static function register_post_type (): void
     {
+
         static::set_name();
         static::set_public_name();
         static::set_plural_name();
@@ -29,11 +30,11 @@ class PostType extends Post {
         // generer les arguments
         $arguments = self::get_arguments();
         $arguments['labels'] = $labels;
-        dump($arguments);
-
-        //register_post_type(self::$_jose_pt_name, $arguments);
-
+      
+        register_post_type(static::$name, $arguments);
+        
         // get instance of post class map
+
     }
     
     /**
@@ -131,23 +132,24 @@ class PostType extends Post {
         $plural_name = self::$plural_name;
 
         $arguments = [
-            'description' => self::get_class_property('_pt_description') ?? "Description of ". $public_name,
-            'public' => self::get_class_property('_pt_public') ?? true,
-            'publicly_queryable' => self::get_class_property('_pt_publicly_queryable') ?? true,
-            'show_ui' => self::get_class_property('_pt_show_ui') ?? true,
-            'show_in_menu' => self::get_class_property('_pt_show_in_menu') ?? true,
-            'query_var' => self::get_class_property('_pt_query_var') ?? true,
-            'capability_type' => [$public_name, $plural_name],
-            'has_archive' => self::get_class_property('_pt_has_archive') ?? true,
-            'hierarchical' => self::get_class_property('_pt_hierarchical') ?? true,
-            'menu_position' => self::get_class_property('_pt_hierarchical') ?? null,
-            'show_in_rest' => self::get_class_property('_pt_show_in_rest') ?? true,
-            'menu_icon' => self::get_class_property('_pt_menu_icon') ?? 'dashicons-block-default',
-            'supports' => self::get_class_property('_pt_supports') ?? ['title', 'page-attributes', 'thumbnail','revisions', 'editor', 'excerpt']
+            'description' => self::get_class_property('description') ?? "Description of ". $public_name,
+            'public' => self::get_class_property('public') ?? true,
+            'publicly_queryable' => self::get_class_property('publicly_queryable') ?? true,
+            'show_ui' => self::get_class_property('show_ui') ?? true,
+            'show_in_menu' => self::get_class_property('show_in_menu') ?? true,
+            'query_var' => self::get_class_property('query_var') ?? true,
+            // 'capability_type' => [$public_name, $plural_name],
+            'has_archive' => self::get_class_property('has_archive') ?? true,
+            'hierarchical' => self::get_class_property('hierarchical') ?? true,
+            'menu_position' => self::get_class_property('hierarchical') ?? null,
+            'show_in_rest' => self::get_class_property('show_in_rest') ?? true,
+            'menu_icon' => self::get_class_property('menu_icon') ?? 'dashicons-block-default',
+            'supports' => self::get_class_property('supports') ?? ['title', 'page-attributes', 'thumbnail','revisions', 'editor', 'excerpt']
         ];
+        
         $arguments['rewrite'] = [
-            'slug' =>  self::get_class_property('_pt_slug') ?? $plural_name,
-            'with_front' =>  self::get_class_property('_pt_with_front') ?? true,
+            'slug' =>  self::get_class_property('slug') ?? $plural_name,
+            'with_front' =>  self::get_class_property('with_front') ?? true,
         ];
         
         return $arguments;
