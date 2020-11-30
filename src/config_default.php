@@ -48,7 +48,10 @@ return [
         'main_menu' => "Main menu"
     ],
 
-    'image_size' => [],
+
+    'image_size' => [
+        "small" => '400x400'
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -119,38 +122,6 @@ return [
     */
 
     "post_type_path" => "app/PostType",
-    // "post_type_path" => "",
-
-    "models" => [
-        "path" => "app/models",
-        //"post_type" => "\App\Models\PageModel",
-
-        
-
-        "taxonomies_model" => [
-            [
-                "model" => "\App\Models\Taxonomies\LevelModel",
-                'unique_name' => "levels",
-                "public_name" => "level", // The name to display in the admin section
-                "public_plural_name" => "levels",
-                "slug" => "levels",
-                "post_types" => ['book']
-            ],
-
-            [
-                "model" => false,
-                'unique_name' => "genres",
-                "public_name" => "Genre", // The name to display in the admin section
-                "public_plural_name" => "Genres",
-                "slug" => "genres",
-                "post_types" => ['book']
-            ],
-        ],
-    ],
-
-    
-
-
-
+    "taxonomies_path" => "app/Taxonomies",
 
 ];

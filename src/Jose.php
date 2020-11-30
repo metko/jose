@@ -8,7 +8,7 @@ use Jose\Utils\Config;
 use Timber\Timber;
 
 class Jose {
-
+    
     /**
      * If the app has already been inited
      *

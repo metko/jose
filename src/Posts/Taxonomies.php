@@ -1,12 +1,14 @@
 <?php
 
+
+
 namespace Jose\Posts;
 use ErrorException;
 use Jose\Traits\useHooks;
 use Jose\Utils\Config;
 use Timber\Post;
 
-class PostType extends Post {
+class Taxonomies {
 
     // public static $_pt_name = null;
     private $public_name = null;
@@ -19,18 +21,25 @@ class PostType extends Post {
      */
     public  function register_post_type (): void
     {
+
         $this->set_name();
         $this->set_public_name();
         $this->set_plural_name();
+        
+  
+        if( ! property_exists(get_called_class(), 'post_types')) {
+                throw new ErrorException('Need at least one post type to, rattach the taxonomy');
+        }
+        
 
-        // // generer les labels
+        // generer les labels
         $labels = $this->get_labels();
 
-        // // generer les arguments
+        // generer les arguments
         $arguments = $this->get_arguments();
         $arguments['labels'] = $labels;
-        
-        register_post_type($this->name, $arguments);
+
+        register_taxonomy($this->name, $this->post_types ,$arguments);
         
         // get instance of post class map
 
@@ -43,10 +52,10 @@ class PostType extends Post {
      */
     private function set_name(): void
     {
-        if( ! isset($this->name) ) {
+        if( ! $this->get_class_property('name') ) {
             // must have the post type name
             if( ! property_exists(get_called_class(), 'name')) {
-                throw new ErrorException('Need a static property _pt_name');
+                throw new ErrorException('Need a static property name');
             }
         }
     }
@@ -58,10 +67,10 @@ class PostType extends Post {
      */
     private function set_public_name(): void
     {
-        if( isset($this->public_name) ) {
-            $this->public_name = strtolower( $this->public_name);
+        if( $this->get_class_property('public_name') ) {
+            $this->public_name = strtolower($this->public_name);
         }else {
-            $this->public_name = strtolower( $this->name);
+            $this->public_name = strtolower($this->name);
         }
     }
     
@@ -72,13 +81,13 @@ class PostType extends Post {
      */
     private function set_plural_name(): void
     {
-        if(  isset($this->public_plural_name) ) {
+        if( $this->get_class_property('public_plural_name') ) {
             $this->plural_name = strtolower($this->plural_name);
         }else {
             $this->plural_name = $this->public_name."s";
         }
     }
-
+                      
     /**
      * Get class property if exists
      *
@@ -130,26 +139,14 @@ class PostType extends Post {
         $public_name = $this->public_name;
         $plural_name = $this->plural_name;
 
-        $arguments = [
-            'description' => $this->get_class_property('description') ?? "Description of ". $public_name,
-            'public' => $this->get_class_property('public') ?? true,
-            'publicly_queryable' => $this->get_class_property('publicly_queryable') ?? true,
-            'show_ui' => $this->get_class_property('show_ui') ?? true,
-            'show_in_menu' => $this->get_class_property('show_in_menu') ?? true,
-            'query_var' => $this->get_class_property('query_var') ?? true,
-            // 'capability_type' => [$public_name, $plural_name],
-            'has_archive' => $this->get_class_property('has_archive') ?? true,
-            'hierarchical' => $this->get_class_property('hierarchical') ?? true,
-            'menu_position' => $this->get_class_property('hierarchical') ?? null,
-            'show_in_rest' => $this->get_class_property('show_in_rest') ?? true,
-            'menu_icon' => $this->get_class_property('menu_icon') ?? 'dashicons-block-default',
-            'supports' => $this->get_class_property('supports') ?? ['title', 'page-attributes', 'thumbnail','revisions', 'editor', 'excerpt']
-        ];
-        
-        $arguments['rewrite'] = [
-            'slug' =>  $this->get_class_property('slug') ?? $plural_name,
-            'with_front' =>  $this->get_class_property('with_front') ?? true,
-        ];
+        $arguments = array(
+            'hierarchical'      => $this->get_class_property('hierarchical') ?? true,
+            'show_ui'           => $this->get_class_property('show_ui') ?? true,
+            'show_admin_column' => $this->get_class_property('show_admin_column') ?? true,
+            'show_in_rest'      => $this->get_class_property('show_in_rest') ?? true, 
+            'query_var'         => $this->get_class_property('query_var') ?? true,
+            'rewrite'           => array( 'slug' => $this->get_class_property('slug') ?? $plural_name ),
+        );
         
         return $arguments;
 
@@ -199,21 +196,23 @@ class PostType extends Post {
         // Config::getInstance()->init();
         $key = Config::getInstance()->get('local_key') ?? "jose";
         
-        return  [
-            'name'               => _x( ucFirst($public_name), 'Post type general name', $key ),
-            'singular_name'      => _x( ucFirst($public_name), 'Post type singular name', $key ),
-            'menu_name'          => _x( ucFirst($plural_name) , 'admin menu', $key ),
-            'name_admin_bar'     => _x( ucFirst($plural_name) , 'add new on admin bar', $key),
-            'add_new'            => _x('Add '.$public_name, $key ),
-            'add_new_item'       => __('Add new '.$public_name, $key ),
-            'new_item'           => __('New '.$public_name, $key ),
-            'edit_item'          => __('Edit '.$public_name, $key ),
-            'view_item'          => __('View '.$public_name, $key ),
-            'all_items'          => __('All '.$plural_name, $key),
-            'search_items'       => __('Search '.$plural_name, $key),
-            'parent_item_colon'  => __('Parent :'.$plural_name , $key),
-            'not_found'          => __('No '.$plural_name.' found.', $key),
-            'not_found_in_trash' => __('No '.$plural_name.' found in Trash.', $key)
+        return [
+            'name'                       => _x( ucFirst($plural_name), 'Taxonomy general name',  $key ),
+            'singular_name'              => _x( ucFirst($public_name), 'taxonomy singular name',  $key ),
+            'search_items'               => __( 'Search '.$plural_name,  $key ),
+            'popular_items'              => __( 'Popular '.$plural_name,  $key ),
+            'all_items'                  => __( 'All '.$plural_name,  $key ),
+            'parent_item'                => null,
+            'parent_item_colon'          => null,
+            'edit_item'                  => __( 'Edit '.$public_name,  $key ),
+            'update_item'                => __( 'Update '.$public_name,  $key ),
+            'add_new_item'               => __( 'Add new '.$public_name,  $key ),
+            'new_item_name'              => __( 'New '.$public_name.' name',  $key ),
+            'separate_items_with_commas' => __( 'Separate '.$plural_name.' with commas',  $key ),
+            'add_or_remove_items'        => __( 'Add or remove '.$plural_name,  $key ),
+            'choose_from_most_used'      => __( 'Choose from the most used '.$plural_name,  $key ),
+            'not_found'                  => __( 'No '.$plural_name.' found.',  $key ),
+            'menu_name'                  => __( ucFirst($plural_name),  $key ),
         ];
     }
 
