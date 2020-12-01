@@ -102,7 +102,7 @@ class PostClass {
         if( ! class_exists($class_model)) {
             throw new ErrorException('Model '. $class->post_model .' doesnt exists');
         }
-
+        //dump($class->name, $class->post_model);
         // auto generate class model
         PostClassMap::getInstance()->add([$class->name => $class->post_model]);
     }

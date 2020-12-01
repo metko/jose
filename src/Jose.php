@@ -41,7 +41,6 @@ class Jose {
         return Config::getInstance()->get($key);
     }
     
-
     /**
      * Check all the necessary php version, lib etc here....
      *

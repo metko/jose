@@ -59,7 +59,7 @@ class App {
         
         // // (new Taxonomies())->init();
         // // Activate the postclass og all class
-        // PostClassMap::getInstance()->apply();
+        PostClassMap::getInstance()->apply();
         // // *****************    
         // // Create default context
         // Assets::getInstance()->init();
@@ -140,12 +140,7 @@ class App {
     public function autoInjectModelToContext() 
     {
 
-        if(is_archive()) {
-            // TODO
-            // dump('im a archive');
-            // dump($context);
-            $this->context['post']['post_title'] = $this->context['wp_title'];
-        }
+    
         
     
         if(is_singular()) {

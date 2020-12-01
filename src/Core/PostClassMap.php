@@ -45,8 +45,7 @@ class PostClassMap {
      * @return void
      */
     public function addPostClassPage () {
-
-        if( array_key_exists("pages_model", $this->config) &&  $this->config['pages_model'] ) {
+        if( $this->config && array_key_exists("pages_model", $this->config) &&  $this->config['pages_model'] ) {
 
             if(! class_exists($this->config['pages_model'])) {
                 throw new ClassNotFoundException($this->config['pages_model']);

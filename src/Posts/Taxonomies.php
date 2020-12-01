@@ -112,7 +112,6 @@ class Taxonomies {
         if(method_exists(get_called_class(), 'define_arguments')) {
 
             // use the labels return by the child class
-            dump('use the built in class for argument');
             $arguments = $this->define_arguments(); 
 
             // if errors
