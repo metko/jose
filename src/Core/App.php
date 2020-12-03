@@ -10,12 +10,16 @@ use Jose\Core\Theme\Theme;
 use Jose\Utils\Config;
 use Timber\Timber;
 
-class App {
+class App extends \Timber\Site {
     
     public $context = [];
 
-    public function __construct() 
+    public $THEME_INITED = 0;
+
+    public function __construct($site_name_or_id = null) 
     {
+       
+        // dump('constryuct');
         // *****************    
         // Load the constants
         require(dirname(__DIR__).'/Utils/constants.php');
@@ -31,7 +35,9 @@ class App {
         // // *****************    
         // // Define the cache policy
         // (new CacheHandler())->init();
+      
 
+    
         // *****************    
         // Init theme configuration
         (new Theme())->init();
@@ -44,15 +50,6 @@ class App {
         // Define the folders the views
         (new Views())->init();
 
-        // *****************    
-        // Create default contet
-        (new Context())->init();
-
-        // // TODO Reset choose a way to handle the error template
-        // $whoops = new \Whoops\Run;
-        // $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
-        // $whoops->register();
-        
         // // *****************    
         // // Register the post type/taxonomies/terms and models
         (new PostClass())->init();
@@ -60,23 +57,33 @@ class App {
         // // (new Taxonomies())->init();
         // // Activate the postclass og all class
         PostClassMap::getInstance()->apply();
+
+        // *****************    
+        // Create default contet
+        // // TODO Reset choose a way to handle the error template
+        // $whoops = new \Whoops\Run;
+        // $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
+        // $whoops->register();
+        new Timber();
+        parent::__construct($site_name_or_id);
+        
+    }
+
+    public function init_theme() {
+        
+        if($this->THEME_INITED === 1) {
+            return;
+        }
         // // *****************    
         // // Create default context
         // Assets::getInstance()->init();
-       
+        (new Plugins())->init();
+
+        $this->THEME_INITED = 1;
+
+        return $this;
     }
     
-    /**
-     * Return the actual state of the context
-     * Timber context + Jose context
-     *
-     * @return array
-     */
-    public function get_context() 
-    {
-        return array_merge(Timber::context(), $this->context);
-    }
-
     /**
      * Pass varibale into the context
      *
@@ -87,34 +94,11 @@ class App {
     public function pass($param1 = null, $param2 = null) 
     {
 
-        if(!$param1) {
-            return $this;
-        }
-        if(is_array($param1)) {
-            $this->addArrayToContext($param1);
-        }else if( isset($param2)) {
-            $this->context[$param1] = $param2;
-        }
+        Context::getInstance()->pass($param1, $param2);
         return $this;
         
     }
-    
-    /**
-     * Add an array to the context
-     *
-     * @param  mixed $array
-     * @return null
-     */
-    public function addArrayToContext(Array $array) 
-    {
-        if( count($array)) {
-            foreach($array as $key => $value) {
-                $context[$key] = $value;
-            }
-        }
-        $this->context = array_merge($this->context, $context);
-    }
-
+   
     /**
      * Use Timber render function to output twig file, with context and cache
      *
@@ -123,10 +107,12 @@ class App {
      */
     public function render(String $template) 
     {
+    
         // merge the 2
-        $this->context = $this->get_context();
+        $this->context = Context::getInstance()->get();
         $this->autoInjectModelToContext();
         // dd($this->context);
+        // $b = ob_get_clean();
         Timber::render($template.'.twig', $this->context);
     }
 
@@ -140,9 +126,6 @@ class App {
     public function autoInjectModelToContext() 
     {
 
-    
-        
-    
         if(is_singular()) {
             // TODO
             // dump('im a page or a single');
@@ -153,9 +136,6 @@ class App {
         }
 
         if(is_404()) {
-            // TODO
-            // dump('im a page 404');
-            // dump($this->context);
         }
         
     }

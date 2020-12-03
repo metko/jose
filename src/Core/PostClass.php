@@ -46,13 +46,16 @@ class PostClass {
     }
 
 
-    public function init() 
+    /**
+     * init Register post type and taxonomy
+     *
+     * @return void
+     */
+    public function init(): void
     {
         
         $this->regiser_posts_types($this->post_type_path);
         $this->regiser_posts_types($this->taxonomies_path);
-        // Foreach file find into the folder path
-       // dd('end');
 
     }
 
@@ -65,7 +68,7 @@ class PostClass {
      */
     private function regiser_posts_types(string $path) :void 
     {
-     
+        // dump(Context::getInstance()->get());
         foreach ( Finder::getInstance()->getFiles(ROOT.$path) as $file ) {
            // dump($file);
            

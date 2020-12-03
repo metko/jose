@@ -29,7 +29,7 @@ return [
     |
     */    
     'views_path' => "app/views",
-    // 'context_path' => "app/context.php",
+    'context_path' => "app/context.php",
 
 
     // Create spots name for menu and, assign page on the bo abnd call them with 
@@ -112,16 +112,12 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Assets
+    | Post type and taxonomies path
     |--------------------------------------------------------------------------
-    |
-    | This value is the name of your application. This value is used when the
-    | framework needs to place the application's name in a notification or
-    | any other location as required by the application or its packages.
-    |
     */
 
     "post_type_path" => "app/PostType",
     "taxonomies_path" => "app/Taxonomies",
+    "plugins_conf_path" => "config/plugins.php"
 
 ];
