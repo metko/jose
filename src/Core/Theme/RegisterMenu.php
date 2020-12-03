@@ -1,7 +1,10 @@
 <?php
 namespace Jose\Core\Theme;
 
+use Jose\Core\Context;
 use Jose\Utils\Config;
+use Timber\Menu;
+use Timber\Timber;
 
 class RegisterMenu {
 
@@ -20,13 +23,18 @@ class RegisterMenu {
     */
    public function register_menus()
    {
-      $menus = Config::getInstance()->get('menus');
+
+      $menus = Config::getInstance()->get('menus_slot');
       $local_key = Config::getInstance()->get('local_key');
+      $allMenus = [];
 
       foreach($menus as $menu_name => $menu_description) {
          register_nav_menu($menu_name, __($menu_description, $local_key));
+         $allMenus[$menu_name] =  new \Timber\Menu($menu_name);
       }
-     
+
+      Context::getInstance()->pass('menus', $allMenus );
+
    }
 
 }

@@ -67,7 +67,7 @@ class Finder {
     }
 
     public function getFiles($path) {
-       return $this->finder->files()->in($path);
+       return (new SymfonyFinder())->files()->in($path);
     }
 
     

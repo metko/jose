@@ -2,7 +2,8 @@
 
 namespace Jose\Models;
 
+use Timber\Post;
 
-class PostModel extends Model {
+class PostModel extends Post {
     
 }

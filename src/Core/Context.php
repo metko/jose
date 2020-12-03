@@ -6,45 +6,94 @@ use ErrorException;
 use Jose\Utils\Config;
 use Jose\Utils\Finder;
 use Timber\Menu;
+use Timber\Timber;
 
 class Context {
 
     public $finder = null;
 
+    public static $instance = null;
+
+    public $context = [];
+
+
     public function __construct() {
         $this->finder = Finder::getInstance();
+        $this->context = $this->get_user_context();
     }
-       
+ 
+
     /**
-     * Inti the global context, pass some global data
+     * Get the timber context merged to user context
+     *
+     */
+    public function get(): array
+    {
+        $context = array_merge(Timber::context() ,$this->context);
+        Timber::$context_cache = [];
+        return $context;
+    }
+
+    /**
+     * Pass varibale into the context
+     *
+     * @param  mixed $param1 
+     * @param  mixed $param2
+     * @return self
+     */
+    public function pass($param1 = null, $param2 = null) 
+    {
+     
+        if(!$param1) {
+            return $this;
+        }
+        if(is_array($param1)) {
+            $this->addArrayToContext($param1);
+        }else if( isset($param2)) {
+            $this->context[$param1] = $param2;
+        }
+        return $this;
+        
+    }
+    
+    /**
+     * Add an array to the context
+     *
+     * @param  mixed $array
+     * @return null
+     */
+    public function addArrayToContext(Array $array) 
+    {
+        if( count($array)) {
+            foreach($array as $key => $value) {
+                $context[$key] = $value;
+            }
+        }
+        $this->context = array_merge($this->context, $context);
+    }
+
+
+    
+    /**
+     * getInstance
      *
      * @return void
      */
-    public function init()
+    public static function getInstance(): Context 
     {
-        $user_context =  $this->get_context();
-        add_filter( 'timber/context', function($context) {
-            
-            // TODO foreach menu in the config file, geneerate a menu, or an array
-            $context['menu'] = new Menu('main_menu');
-            
-            $data['env'] = getenv('WP_ENV');
+        if( ! self::$instance ) {
+            self::$instance = new Context();
+        }
 
-            // get data from context user
-            return array_merge($context,) ;
-
-        } );
-        // if yoast ....
-      
+        return self::$instance;
     }
-
     
     /**
      * Get the config key from config
      *
      * @return array
      */
-    private function get_context(): array
+    private function get_user_context(): array
      {
         $context_path = Config::getInstance()->get('context_path');
         if($context_path) {

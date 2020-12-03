@@ -64,13 +64,16 @@ class Config
     /**
      * Get config instance object
      *
-     * @return void
+     * @return \Jose\Utils\Config
      */
     public static function getInstance(): \Jose\Utils\Config
     {
         if (!self::$instance) {
+     
             self::$instance = new Config();
+
         }
+      
         return self::$instance;
     }
 
@@ -91,7 +94,7 @@ class Config
      *
      * @return void
      */
-    public function init(): void
+    public function init()
     {
         // Rirst, check if conf_path is defined
         if ($this->configuration) {
@@ -117,6 +120,7 @@ class Config
             if ($this->finder->file_exists(APP . 'config.php')) {
                 $this->configuration =  $this->finder->require(APP . 'config.php');
             }
+
         }
 
         // Then merge the default conf, with the new conf if exist

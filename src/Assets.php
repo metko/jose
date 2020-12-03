@@ -136,6 +136,7 @@ class Assets {
         
         return $group;
     }
+    
 
      /**
      * getInstance
