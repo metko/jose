@@ -63,10 +63,10 @@ class Jose {
         if( ! self::$instance) {
             // need to check
             if(self::checkRequirments() ) {
-                self::$instance = new \Jose\Core\App();
                 if($config) {
                     self::config($config);
                 }
+                self::$instance = new \Jose\Core\App();
                 // self::$instance->init_theme();
             }  
         }
