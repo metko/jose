@@ -35,9 +35,7 @@ class App extends \Timber\Site {
         // // *****************    
         // // Define the cache policy
         // (new CacheHandler())->init();
-      
 
-    
         // *****************    
         // Init theme configuration
         (new Theme())->init();
@@ -74,9 +72,11 @@ class App extends \Timber\Site {
         if($this->THEME_INITED === 1) {
             return;
         }
-        // // *****************    
-        // // Create default context
-        // Assets::getInstance()->init();
+
+        // *****************    
+        // Create default context
+        Assets::getInstance()->init();
+
         (new Plugins())->init();
 
         $this->THEME_INITED = 1;

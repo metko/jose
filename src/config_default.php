@@ -44,8 +44,9 @@ return [
     | any other location as required by the application or its packages.
     |
     */
-    'menus' => [
-        'main_menu' => "Main menu"
+    'menus_slot' => [
+        'main_menu' => "Main menu",
+        'footer_menu' => "Footer menu"
     ],
 
 
@@ -86,30 +87,6 @@ return [
             'app.js'
         ],
     ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Assets
-    |--------------------------------------------------------------------------
-    |
-    | This value is the name of your application. This value is used when the
-    | framework needs to place the application's name in a notification or
-    | any other location as required by the application or its packages.
-    |
-    */
-    "breadcrumbs" => [
-
-        'use_yoast_seo' => false,
-
-        'yoast' => [
-            'start' => "<div class='breadcrumb'>",
-            'end' => '</div>',
-        ],
-
-        // 'custom_class' => "\App\YourBreadcrumbClass"
-        'custom_class' => false
-    ],
-
     /*
     |--------------------------------------------------------------------------
     | Post type and taxonomies path
