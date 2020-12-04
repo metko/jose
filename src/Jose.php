@@ -15,25 +15,22 @@ class Jose {
      *
      */
     private static $instance = null;
-    private static $theme_inited = null;
 
     /**
      * Get  the instance of the global app
      *
      */
-    public static function app(): \Jose\Core\App
+    public static function app($config = null): \Jose\Core\App
     {
-       
         if( ! self::$instance) {
-           throw new ErrorException('You need to init jose first in functions.php');
+            // need to check
+            if(self::checkRequirments() ) {
+                if($config) {
+                    self::config($config);
+                }
+                self::$instance = new \Jose\Core\App();
+            }  
         }
-
-        if( ! self::$theme_inited) {
-            // dump('::app()');
-            self::$instance->init_theme();
-            self::$theme_inited = true;
-        }
-      
         return self::$instance;
     }
 

@@ -15,11 +15,8 @@ class App extends \Timber\Site {
     
     public $context = [];
 
-    public $THEME_INITED = 0;
-
     public function __construct($site_name_or_id = null) 
     {
-       
         // dump('constryuct');
         // *****************    
         // Load the constants
@@ -36,7 +33,10 @@ class App extends \Timber\Site {
         // // *****************    
         // // Define the cache policy
         // (new CacheHandler())->init();
+   // Create default context
+        Assets::getInstance()->init();
 
+      
         // *****************    
         // Init theme configuration
         (new Theme())->init();
@@ -59,6 +59,8 @@ class App extends \Timber\Site {
          // Activate Blocks
         (new ACFBlocks())->init();
 
+        (new Plugins())->init();
+
         // *****************    
         // Create default contet
         // // TODO Reset choose a way to handle the error template
@@ -68,23 +70,6 @@ class App extends \Timber\Site {
         new Timber();
         parent::__construct($site_name_or_id);
         
-    }
-
-    public function init_theme() {
-        
-        if($this->THEME_INITED === 1) {
-            return;
-        }
-
-        // *****************    
-        // Create default context
-        Assets::getInstance()->init();
-
-        (new Plugins())->init();
-
-        $this->THEME_INITED = 1;
-
-        return $this;
     }
     
     /**

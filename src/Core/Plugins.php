@@ -9,6 +9,8 @@ use Jose\Utils\Config;
 use Jose\Utils\Finder;
 
 class Plugins {
+
+   
         
     /**
      * config 
@@ -81,13 +83,63 @@ class Plugins {
         }
 
         if( $gen_conf ) {
-            if ( function_exists('yoast_breadcrumb') ) {
-                add_theme_support( 'yoast-seo-breadcrumbs' );
-                $b = $gen_conf['breadcrumb'];
-                $breadcrumb = yoast_breadcrumb( '<'.$b['tag'].' class="'.$b['class'].'">','</'.$b['tag'].'>', false);
-                Context::getInstance()->pass('breadcrumb', $breadcrumb);
+
+            // add breadcrum generation
+            if(!is_admin()) {
+                add_action('template_redirect', function() use ($gen_conf){
+                    if ( function_exists('yoast_breadcrumb') ) {
+                        $b = $gen_conf['breadcrumb'];
+                        $breadcrumb = yoast_breadcrumb( '<'.$b['tag'].' class="'.$b['class'].'">','</'.$b['tag'].'>', false);
+                        Context::getInstance()->pass('breadcrumb', $breadcrumb);
+                    }
+                });
+                           
+            }
+
+        }
+    }
+
+    public function wpml($value):void 
+    {
+        // dd('coucou');
+        if(is_admin()) {
+           
+            if(array_key_exists("scan_dir", $value) ) {
+            
+                add_action('wp_ajax_wpml_get_files_to_scan', function () use($value) {
+                 
+                    $result = array();
+                
+                    if ( $value['scan_dir'] ) {
+                        $file_type = array( 'php', 'twig' );
+                        
+                        $files_found_chunks = array();
+            
+                        foreach (  $value['scan_dir'] as $folder ) {
+                        
+                            $objects = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($folder), \RecursiveIteratorIterator::SELF_FIRST);
+                        
+                            foreach($objects as $name => $object){
+                                if(!$object->isDir() && $object->isFile() && in_array($object->getExtension(), $file_type )):
+                                    $files_found_chunks[] = $name;
+                                endif;
+                            }
+                        }
+    
+                        $files = $files_found_chunks;
+                        $result = array(
+                            'files' => $files,
+                            'no_files_message' => __( 'Files already scanned.', 'wpml-string-translation' ),
+                        );
+                    }
+                
+                    wp_send_json_success($result);
+                
+                    
+                }, 0);
             }
         }
+         
     }
 
 }
