@@ -25,11 +25,10 @@ class RegisterMenu {
    {
 
       $menus = Config::getInstance()->get('menus_slot');
-      $local_key = Config::getInstance()->get('local_key');
       $allMenus = [];
 
       foreach($menus as $menu_name => $menu_description) {
-         register_nav_menu($menu_name, __($menu_description, $local_key));
+         register_nav_menu($menu_name, __($menu_description, "jose"));
          $allMenus[$menu_name] =  new \Timber\Menu($menu_name);
       }
 

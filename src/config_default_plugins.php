@@ -8,16 +8,15 @@ return [
     | Plugins configuration
     |--------------------------------------------------------------------------
     */
-
-    "yoast_seo" => [
+    'yoast_seo' => [
         "breadcrumb" => [
             "tag" => "div",
-            "class" => "breadcrumb",
+            "class" => "breadcbreadrumb",
         ]
     ],
-
-    "wpml" => [
-        "use" => true,
-    ],
- 
+    
+    'wpml' => [
+        "scan_dir" => [ ROOT.'app' ]
+    ]
+        
 ];

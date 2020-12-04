@@ -103,7 +103,6 @@ class Plugins {
     {
         // dd('coucou');
         if(is_admin()) {
-           
             if(array_key_exists("scan_dir", $value) ) {
             
                 add_action('wp_ajax_wpml_get_files_to_scan', function () use($value) {
@@ -114,8 +113,8 @@ class Plugins {
                         $file_type = array( 'php', 'twig' );
                         
                         $files_found_chunks = array();
-            
-                        foreach (  $value['scan_dir'] as $folder ) {
+                        $dir = array_merge($value['scan_dir'], [get_template_directory()]);
+                        foreach (  $dir as $folder ) {
                         
                             $objects = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($folder), \RecursiveIteratorIterator::SELF_FIRST);
                         

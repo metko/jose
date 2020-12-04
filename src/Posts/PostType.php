@@ -46,7 +46,7 @@ class PostType extends Post {
         if( ! isset($this->name) ) {
             // must have the post type name
             if( ! property_exists(get_called_class(), 'name')) {
-                throw new ErrorException('Need a static property _pt_name');
+                throw new ErrorException('Need a static property name');
             }
         }
     }
@@ -192,28 +192,21 @@ class PostType extends Post {
         $public_name = $this->public_name;
         $plural_name = $this->plural_name;
         
-        //Get local key
-        // // TODO remove it before final build
-        // define("ROOT",  dirname($_SERVER['DOCUMENT_ROOT'])."/");
-        // define("APP",  ROOT."app/");
-        // Config::getInstance()->init();
-        $key = Config::getInstance()->get('local_key') ?? "jose";
-        
         return  [
-            'name'               => _x( ucFirst($public_name), 'Post type general name', $key ),
-            'singular_name'      => _x( ucFirst($public_name), 'Post type singular name', $key ),
-            'menu_name'          => _x( ucFirst($plural_name) , 'admin menu', $key ),
-            'name_admin_bar'     => _x( ucFirst($plural_name) , 'add new on admin bar', $key),
-            'add_new'            => _x('Add '.$public_name, $key ),
-            'add_new_item'       => __('Add new '.$public_name, $key ),
-            'new_item'           => __('New '.$public_name, $key ),
-            'edit_item'          => __('Edit '.$public_name, $key ),
-            'view_item'          => __('View '.$public_name, $key ),
-            'all_items'          => __('All '.$plural_name, $key),
-            'search_items'       => __('Search '.$plural_name, $key),
-            'parent_item_colon'  => __('Parent :'.$plural_name , $key),
-            'not_found'          => __('No '.$plural_name.' found.', $key),
-            'not_found_in_trash' => __('No '.$plural_name.' found in Trash.', $key)
+            'name'               => _x( ucFirst($public_name), 'Post type general name', 'jose' ),
+            'singular_name'      => _x( ucFirst($public_name), 'Post type singular name', 'jose' ),
+            'menu_name'          => _x( ucFirst($plural_name) , 'admin menu', 'jose' ),
+            'name_admin_bar'     => _x( ucFirst($plural_name) , 'add new on admin bar', 'jose'),
+            'add_new'            => _x('Add '.$public_name, 'jose' ),
+            'add_new_item'       => __('Add new '.$public_name, 'jose' ),
+            'new_item'           => __('New '.$public_name, 'jose' ),
+            'edit_item'          => __('Edit '.$public_name, 'jose' ),
+            'view_item'          => __('View '.$public_name, 'jose' ),
+            'all_items'          => __('All '.$plural_name, 'jose'),
+            'search_items'       => __('Search '.$plural_name, 'jose'),
+            'parent_item_colon'  => __('Parent :'.$plural_name , 'jose'),
+            'not_found'          => __('No '.$plural_name.' found.', 'jose'),
+            'not_found_in_trash' => __('No '.$plural_name.' found in Trash.', 'jose')
         ];
     }
 

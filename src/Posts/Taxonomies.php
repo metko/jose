@@ -187,31 +187,24 @@ class Taxonomies {
         // Check if we have a public singular name 
         $public_name = $this->public_name;
         $plural_name = $this->plural_name;
-        
-        //Get local key
-        // // TODO remove it before final build
-        // define("ROOT",  dirname($_SERVER['DOCUMENT_ROOT'])."/");
-        // define("APP",  ROOT."app/");
-        // Config::getInstance()->init();
-        $key = Config::getInstance()->get('local_key') ?? "jose";
-        
+  
         return [
-            'name'                       => _x( ucFirst($plural_name), 'Taxonomy general name',  $key ),
-            'singular_name'              => _x( ucFirst($public_name), 'taxonomy singular name',  $key ),
-            'search_items'               => __( 'Search '.$plural_name,  $key ),
-            'popular_items'              => __( 'Popular '.$plural_name,  $key ),
-            'all_items'                  => __( 'All '.$plural_name,  $key ),
+            'name'                       => _x( ucFirst($plural_name), 'Taxonomy general name',  "jose" ),
+            'singular_name'              => _x( ucFirst($public_name), 'taxonomy singular name',  "jose" ),
+            'search_items'               => __( 'Search '.$plural_name,  "jose" ),
+            'popular_items'              => __( 'Popular '.$plural_name,  "jose" ),
+            'all_items'                  => __( 'All '.$plural_name,  "jose" ),
             'parent_item'                => null,
             'parent_item_colon'          => null,
-            'edit_item'                  => __( 'Edit '.$public_name,  $key ),
-            'update_item'                => __( 'Update '.$public_name,  $key ),
-            'add_new_item'               => __( 'Add new '.$public_name,  $key ),
-            'new_item_name'              => __( 'New '.$public_name.' name',  $key ),
-            'separate_items_with_commas' => __( 'Separate '.$plural_name.' with commas',  $key ),
-            'add_or_remove_items'        => __( 'Add or remove '.$plural_name,  $key ),
-            'choose_from_most_used'      => __( 'Choose from the most used '.$plural_name,  $key ),
-            'not_found'                  => __( 'No '.$plural_name.' found.',  $key ),
-            'menu_name'                  => __( ucFirst($plural_name),  $key ),
+            'edit_item'                  => __( 'Edit '.$public_name,  "jose" ),
+            'update_item'                => __( 'Update '.$public_name,  "jose" ),
+            'add_new_item'               => __( 'Add new '.$public_name,  "jose" ),
+            'new_item_name'              => __( 'New '.$public_name.' name',  "jose" ),
+            'separate_items_with_commas' => __( 'Separate '.$plural_name.' with commas',  "jose" ),
+            'add_or_remove_items'        => __( 'Add or remove '.$plural_name,  "jose" ),
+            'choose_from_most_used'      => __( 'Choose from the most used '.$plural_name,  "jose" ),
+            'not_found'                  => __( 'No '.$plural_name.' found.',  "jose" ),
+            'menu_name'                  => __( ucFirst($plural_name),  "jose" ),
         ];
     }
 
