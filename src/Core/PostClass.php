@@ -70,8 +70,7 @@ class PostClass {
     {
         // dump(Context::getInstance()->get());
         foreach ( Finder::getInstance()->getFiles(ROOT.$path) as $file ) {
-           // dump($file);
-           
+                       
             // Get file path
             $file_path = $file->getRelativePathname();
 

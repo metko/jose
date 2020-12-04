@@ -3,6 +3,7 @@
 namespace Jose\Core;
 
 use Jose\Assets;
+use Jose\Core\Blocks\ACFBlocks;
 use Jose\Core\CacheHandler;
 use Jose\Core\Exceptions\ClassNotFoundException;
 use Jose\Core\Theme\RegisterMenu;
@@ -52,9 +53,11 @@ class App extends \Timber\Site {
         // // Register the post type/taxonomies/terms and models
         (new PostClass())->init();
         
-        // // (new Taxonomies())->init();
         // // Activate the postclass og all class
         PostClassMap::getInstance()->apply();
+
+         // Activate Blocks
+        (new ACFBlocks())->init();
 
         // *****************    
         // Create default contet
@@ -105,14 +108,13 @@ class App extends \Timber\Site {
      * @param  mixed $template
      * @return 
      */
-    public function render(String $template) 
+    public function render(String $template, $context = []) 
     {
     
         // merge the 2
-        $this->context = Context::getInstance()->get();
+        $this->context = array_merge(Context::getInstance()->get(), $context);
         $this->autoInjectModelToContext();
-        // dd($this->context);
-        // $b = ob_get_clean();
+
         Timber::render($template.'.twig', $this->context);
     }
 

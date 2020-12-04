@@ -95,6 +95,9 @@ return [
 
     "post_type_path" => "app/PostType",
     "taxonomies_path" => "app/Taxonomies",
-    "plugins_conf_path" => "config/plugins.php"
+    "plugins_conf_path" => "config/plugins.php",
+    
+    // must have acf pro
+    "acf_block_path" => ''
 
 ];
