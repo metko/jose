@@ -3,8 +3,10 @@
 namespace Jose\Core\Blocks;
 
 use ErrorException;
+use Jose\Core\PostClassMap;
 use Jose\Utils\Config;
 use Jose\Utils\Finder;
+use Timber\Timber;
 
 class ACFBlocks {
     
@@ -35,9 +37,16 @@ class ACFBlocks {
         }
 
         // If ! acf
-        if ( ! function_exists( 'acf_register_block' ) ) {
+        if ( ! function_exists( 'acf_register_block' )  && ! function_exists( 'acf_maybe_get_POST') ) {
             throw new ErrorException('You must use and activate acf pro to use ACFBlocks');
             return;
+        }
+        
+        $classMap  = PostClassMap::getInstance()->classMap;
+        if(array_key_exists($post->post_type, $classMap)) {
+            $global_post = Timber::query_post($post_id, $classMap[$post->post_type]);
+        } else {
+            $global_post = Timber::query_post($post_id);
         }
         
         // Scan the path and init all class inside
@@ -50,7 +59,7 @@ class ACFBlocks {
             $class_name = pathToNamespace($this->blocks_path) . explode('.', $file_path)[0];
             
             // Then register the post type$$
-            new $class_name();
+            new $class_name($global_post);
            
         }
     }

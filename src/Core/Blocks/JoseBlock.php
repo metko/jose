@@ -7,13 +7,17 @@ use Jose\Jose;
 
 class JoseBlock {
     
+
+    public $post;
     /**
      * __construct
      *
      * @return void
      */
-    public function __construct() {
-        
+    public function __construct($global_post = null) {
+
+        $this->post = $global_post;
+
         // The name of the block
         if( ! $this->name ) {
             throw new ErrorException('Block must have a name');
@@ -114,7 +118,7 @@ class JoseBlock {
         
         // Store block values.
         $context['block'] = $block;
-        $context['post'] = $this->get_post();
+        $context['post'] = $this->post;
         
         $context['is_preview'] = $is_preview;
        
