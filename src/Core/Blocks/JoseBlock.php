@@ -61,8 +61,17 @@ class JoseBlock {
      * @return void
      */
     public function get_post() {
-        global $post;
-        return $post;
+        if ( is_admin() && function_exists( 'acf_maybe_get_POST' ) ) :
+            $post_id = intval( acf_maybe_get_POST( 'post_id' ) );
+            $post = get_post($post_id);
+            if($post){
+                return $post; 
+            } 
+            return null;
+        else :
+            global $post;
+            return $post;
+        endif;   
     }
         
     /**
