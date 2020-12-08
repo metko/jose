@@ -7,7 +7,6 @@ use Jose\Jose;
 
 class JoseBlock {
     
-
     /**
      * __construct
      *
@@ -106,25 +105,24 @@ class JoseBlock {
         
         // Store block values.
         $context['block'] = $block;
+        $context['post'] = $this->get_post();
+        
+        $context['is_preview'] = $is_preview;
+       
+        if( isset($this->template) ) {
+            $context['template'] = $this->template;
+        }else {
+            $context['template'] = acf_slugify($this->name);
+        }
 
         // Store field values.
         if(method_exists($this, 'before_render')) {
-            $context['fields'] = $this->before_render(get_fields());
+            $context['fields'] = $this->before_render(get_fields(), $context);
         }else {
             $context['fields'] = get_fields();
         }
-        //dd($context['fields']);
-        // Store $is_preview value.
-        $context['is_preview'] = $is_preview;
-        // Render the block.
-        // dd($context);*
-        if( isset($this->template) ) {
-            $template = $this->template;
-        }else {
-            $template = acf_slugify($this->name);
-        }
-        Jose::app()->render( 'block/'.$template, $context);
-        //Timber::render( 'block/example-block.twig', $context );
+      
+        Jose::app()->render( 'block/'.$context['template'], $context);
     }
 
     
