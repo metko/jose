@@ -55,8 +55,16 @@ class JoseBlock {
             'keywords'        => $this->keywords ?? ['example'],
         ]);
     }
-
     
+    /**
+     * Return global current post
+     *
+     * @return void
+     */
+    public function get_post() {
+        global $post;
+        return $post;
+    }
         
     /**
      * register_acf_fields
