@@ -19,6 +19,7 @@ class ACFBlocks {
      * @return void
      */
     public function __construct() {
+        
         // get Block path
         if(!empty(Config::getInstance()->get('acf_block_path'))) {
             $this->blocks_path = Config::getInstance()->get('acf_block_path');
@@ -36,33 +37,22 @@ class ACFBlocks {
             return;
         }
 
-        // If ! acf
         if ( ! function_exists( 'acf_register_block' )  && ! function_exists( 'acf_maybe_get_POST') ) {
             throw new ErrorException('You must use and activate acf pro to use ACFBlocks');
             return;
         }
-        
-        if (  function_exists( 'acf_maybe_get_POST' ) ) {
-            $post_id = intval( acf_maybe_get_POST( 'post_id' ) );
-            $post = get_post($post_id);
-        }else {
-            global $post;
-        }
 
-        $global_post = null;
-        
-        if($post) {
-            $classMap  = PostClassMap::getInstance()->classMap;
-            if(array_key_exists($post->post_type, $classMap)) {
-                $global_post = Timber::query_post($post_id, $classMap[$post->post_type]);
-            } else {
-                $global_post = Timber::query_post($post_id);
-            }
-        }
-        
+        add_action( 'acf/init', [$this, 'register_blocks'] );
+
+       
+    }
+
+    public function register_blocks()
+    {
+
         // Scan the path and init all class inside
         foreach ( Finder::getInstance()->getFiles(ROOT.$this->blocks_path) as $file ) {
-                       
+                    
             // Get file path
             $file_path = $file->getRelativePathname();
 
@@ -70,8 +60,8 @@ class ACFBlocks {
             $class_name = pathToNamespace($this->blocks_path) . explode('.', $file_path)[0];
             
             // Then register the post type$$
-            new $class_name($global_post);
-           
+            new $class_name();
+        
         }
     }
 

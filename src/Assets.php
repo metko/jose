@@ -37,7 +37,7 @@ class Assets {
      * @param  mixed $type
      * @return void
      */
-    function loadDefaultScript($type) {
+    public function loadDefaultScript($type) {
         // get main css file name
         if($this->config) {
 
@@ -63,7 +63,7 @@ class Assets {
      *
      * @return void
      */
-    function registerMainScripts() {
+    public function registerMainScripts() {
         
         // $this->js("runtime.js");  
         $this->loadDefaultScript("js");  
@@ -78,7 +78,7 @@ class Assets {
      * @param  mixed $groupe
      * @return void
      */
-    function css($file, $groupe = null) {
+    public function css($file, $groupe = null) {
         if(!$groupe) {
             $groupe = $this->getGroup($file);
         }
@@ -93,7 +93,7 @@ class Assets {
      * @param  mixed $groupe
      * @return void
      */
-    function js($file, $groupe = null) {
+    public function js($file, $groupe = null) {
 
         if(!$groupe) {
             $groupe = $this->getGroup($file);
@@ -111,9 +111,8 @@ class Assets {
      * @param  mixed $groupe
      * @return void
      */
-    function assetPath($key) {
+    public function assetPath($key) {
         if($this->manifest) {
-            dump( $this->manifest[$key]);
             return get_stylesheet_directory_uri() . '/assets' . $this->manifest[$key];
         } else {
             return get_stylesheet_directory_uri() . '/assets/' . $key;
@@ -129,13 +128,14 @@ class Assets {
      * @param  mixed $file
      * @return void
      */
-    function getGroup($file) {
+    public function getGroup($file) {
 
         $filename = explode('.', $file);
         $group =  $filename[0]."_style";
         
         return $group;
     }
+
     
 
      /**
@@ -150,6 +150,5 @@ class Assets {
         }
         return self::$instance;
     } 
-
 
 }

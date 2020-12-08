@@ -3,7 +3,9 @@
 namespace Jose\Core\Blocks;
 
 use ErrorException;
+use Jose\Core\PostClassMap;
 use Jose\Jose;
+use Timber\Timber;
 
 class JoseBlock {
     
@@ -24,7 +26,7 @@ class JoseBlock {
         }
 
         // Hook on acf
-        add_action( 'acf/init', [$this, 'register_block'] );
+      $this->register_block();
     }
 
     
@@ -59,25 +61,7 @@ class JoseBlock {
         ]);
     }
     
-    /**
-     * Return global current post
-     *
-     * @return void
-     */
-    public function get_post() {
-        if ( is_admin() && function_exists( 'acf_maybe_get_POST' ) ) :
-            $post_id = intval( acf_maybe_get_POST( 'post_id' ) );
-            $post = get_post($post_id);
-            if($post){
-                return $post; 
-            } 
-            return null;
-        else :
-            global $post;
-            return $post;
-        endif;   
-    }
-        
+  
     /**
      * register_acf_fields
      *
@@ -112,13 +96,33 @@ class JoseBlock {
         //dd($this->fields());
     }
 
+    public function get_global_post() {
+
+        if (is_admin() && function_exists( 'acf_maybe_get_POST' ) ) {
+            $post_id = intval( acf_maybe_get_POST( 'post_id' ) );
+            $post = get_post($post_id);
+        }else {
+            global $post;
+            $post_id = $post->ID;
+        }
+
+        $classMap  = PostClassMap::getInstance()->classMap;
+        if(array_key_exists($post->post_type, $classMap)) {
+            $global_post = Timber::query_post($post_id, $classMap[$post->post_type]);
+        } else {
+            $global_post = Timber::query_post($post_id);
+        }
+    
+        return $global_post;
+    }
+
     public function my_acf_block_render_callback($block, $content = '', $is_preview = false): void
     {
         $context = [];
-        
+
         // Store block values.
         $context['block'] = $block;
-        $context['post'] = $this->post;
+      
         
         $context['is_preview'] = $is_preview;
        
@@ -128,16 +132,14 @@ class JoseBlock {
             $context['template'] = acf_slugify($this->name);
         }
 
-        
-
         // Store field values.
         if(method_exists($this, 'before_render')) {
             $context['fields'] = $this->before_render(get_fields(), $context);
         }else {
             $context['fields'] = get_fields();
         }
-      
-        Jose::app()->render( 'block/'.$context['template'], $context);
+        $context['fields']['is_preview'] = $is_preview;
+        Jose::app()->render( 'block/'.$context['template'], $context['fields']);
     }
 
     
