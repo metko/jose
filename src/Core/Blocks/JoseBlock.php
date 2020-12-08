@@ -128,6 +128,8 @@ class JoseBlock {
             $context['template'] = acf_slugify($this->name);
         }
 
+        
+
         // Store field values.
         if(method_exists($this, 'before_render')) {
             $context['fields'] = $this->before_render(get_fields(), $context);
