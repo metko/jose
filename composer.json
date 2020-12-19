@@ -33,7 +33,7 @@
         }
     },
     "autoload-dev": {
-        "psr-4": {https://gitlab.walkingnerds.dev/twn/jose
+        "psr-4": {
             "Jose\\Tests\\": "tests"
         }
     },
