@@ -47,3 +47,12 @@ function pathToNamespace(string $path) :string
 
     return $namespacePath;
 }
+
+function j_config($key = null)  {
+    return \Jose\Jose::get_config($key);
+}
+
+function j_context($key = null)  {
+    return \Jose\Core\Context::getInstance();
+}
+

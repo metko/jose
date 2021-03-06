@@ -3,6 +3,7 @@
 namespace Jose\Core;
 
 use ErrorException;
+use Jose\Core\Exceptions\FileNotException;
 use Jose\Utils\Config;
 use Jose\Utils\Finder;
 use Timber\Menu;
@@ -100,7 +101,8 @@ class Context {
             if($this->finder->file_exists(ROOT . $context_path)) {
                 return $this->finder->require(ROOT . $context_path);
             }else {
-                throw new ErrorException(ROOT . $context_path . " doesnt exists");
+                return [];
+                throw new FileNotException(ROOT . $context_path . " doesnt exists");
             }
         }
         return [];
