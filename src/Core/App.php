@@ -53,6 +53,10 @@ class App extends \Timber\Site {
 
         // // Activate the postclass og all class
         PostClassMap::getInstance()->apply();
+
+         // Activate Blocks
+        (new JoseACFFields())->init();
+
          // Activate Blocks
         (new JoseBlocks())->init();
 

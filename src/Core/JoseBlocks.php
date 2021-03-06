@@ -3,9 +3,7 @@
 namespace Jose\Core;
 
 use DirectoryIterator;
-use ErrorException;
-use Jose\Core\PostClassMap;
-use Jose\Jose;
+
 use Jose\Utils\Config;
 use Jose\Utils\Finder;
 use Timber\Timber;
@@ -20,7 +18,7 @@ class JoseBlocks {
 
     public function __construct() {
         if(! $this->blocks_path = Config::getInstance()->get("block_path") ) {
-            $this->blocks_path = 'jose/blocks';
+            $this->blocks_path = 'jose/Blocks';
         }
     }
 
