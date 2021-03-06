@@ -4,6 +4,7 @@
 
 namespace Jose\Posts;
 use ErrorException;
+use Jose\Core\Exceptions\MissingPostTypeInTaxonomiesException;
 use Jose\Traits\useHooks;
 use Jose\Utils\Config;
 use Timber\Post;
@@ -28,7 +29,7 @@ class Taxonomies {
         
   
         if( ! property_exists(get_called_class(), 'post_types')) {
-                throw new ErrorException('Need at least one post type to, rattach the taxonomy');
+                throw new MissingPostTypeInTaxonomiesException($this->name, get_called_class());
         }
         
 
