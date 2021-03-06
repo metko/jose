@@ -56,7 +56,6 @@ class Jose {
     public static function init($config = null): void
     {
         // dump('::init()');
-
         if( ! self::$instance) {
             // need to check
             if(self::checkRequirments() ) {

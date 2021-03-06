@@ -52,14 +52,12 @@ class App extends \Timber\Site {
         // // *****************    
         // // Register the post type/taxonomies/terms and models
         (new PostClass())->init();
-        
+
         // // Activate the postclass og all class
         PostClassMap::getInstance()->apply();
-
          // Activate Blocks
         (new ACFBlocks())->init();
 
-        (new Plugins())->init();
 
         // *****************    
         // Create default contet
