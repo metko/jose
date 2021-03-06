@@ -53,7 +53,7 @@ class PostClass {
      */
     public function init(): void
     {
-        
+
         $this->regiser_posts_types($this->post_type_path);
         $this->regiser_posts_types($this->taxonomies_path);
 
@@ -68,9 +68,12 @@ class PostClass {
      */
     private function regiser_posts_types(string $path) :void 
     {
-        // dump(Context::getInstance()->get());
+        if( ! Finder::getInstance()->file_exists(ROOT.$path)) {
+            return;
+        }
+
         foreach ( Finder::getInstance()->getFiles(ROOT.$path) as $file ) {
-                       
+
             // Get file path
             $file_path = $file->getRelativePathname();
 
