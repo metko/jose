@@ -28,8 +28,8 @@ return [
     | any other location as required by the application or its packages.
     |
     */    
-    'views_path' => "app/views",
-    'context_path' => "app/context.php",
+    'views_path' => "jose/views",
+    'context_path' => "jose/context.php",
 
 
     // Create spots name for menu and, assign page on the bo abnd call them with 
@@ -81,8 +81,8 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    "post_type_path" => "app/PostType",
-    "taxonomies_path" => "app/Taxonomies",
+    "post_type_path" => "jose/PostType",
+    "taxonomies_path" => "jose/Taxonomies",
 
     // must have acf pro
     "acf_block_path" => ''
