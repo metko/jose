@@ -3,8 +3,6 @@
 namespace Jose\Core;
 
 use Jose\Assets;
-use Jose\Core\Blocks\ACFBlocks;
-use Jose\Core\CacheHandler;
 use Jose\Core\Exceptions\ClassNotFoundException;
 use Jose\Core\Theme\RegisterMenu;
 use Jose\Core\Theme\Theme;
@@ -56,7 +54,7 @@ class App extends \Timber\Site {
         // // Activate the postclass og all class
         PostClassMap::getInstance()->apply();
          // Activate Blocks
-        (new ACFBlocks())->init();
+        (new JoseBlocks())->init();
 
 
         // *****************    

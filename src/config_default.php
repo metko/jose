@@ -28,7 +28,9 @@ return [
     | any other location as required by the application or its packages.
     |
     */    
-    'views_path' => "jose/views",
+    'views_path' => "jose/Views",
+    'block_path' => "jose/Blocks",
+    'acf_fields_path' => "jose/Fields",
     'context_path' => "jose/context.php",
 
 
@@ -83,8 +85,5 @@ return [
 
     "post_type_path" => "jose/PostType",
     "taxonomies_path" => "jose/Taxonomies",
-
-    // must have acf pro
-    "acf_block_path" => ''
 
 ];
