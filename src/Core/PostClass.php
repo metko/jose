@@ -37,11 +37,11 @@ class PostClass {
     public function __construct() 
     {
         if(! $this->post_type_path = Config::getInstance()->get("post_type_path") ) {
-            $this->post_type_path = 'app/PostType';
+            $this->post_type_path = 'jose/PostType';
         }
 
         if(! $this->taxonomies_path = Config::getInstance()->get("taxonomies_path") ) {
-            $this->taxonomies_path = 'app/Taxomies';
+            $this->taxonomies_path = 'jose/Taxomies';
         }
     }
 
