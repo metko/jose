@@ -2,6 +2,7 @@
 
 namespace Jose\Posts;
 use ErrorException;
+use Jose\Core\Exceptions\MissingPropertyException;
 use Jose\Traits\useHooks;
 use Jose\Utils\Config;
 use Timber\Post;
@@ -46,7 +47,7 @@ class PostType extends Post {
         if( ! isset($this->name) ) {
             // must have the post type name
             if( ! property_exists(get_called_class(), 'name')) {
-                throw new ErrorException('Need a static property name');
+                throw new MissingPropertyException('name', get_called_class());
             }
         }
     }
