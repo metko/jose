@@ -3,6 +3,7 @@
 namespace Jose\Utils;
 
 use ErrorException;
+use Jose\Core\Exceptions\FileNotException;
 
 class Config
 {
@@ -104,7 +105,7 @@ class Config
 
                 // if defined file doest exists, throw an error
                 if (!$this->finder->file_exists(ROOT . $this->configuration)) {
-                    throw new ErrorException(ROOT . $this->configuration . " doesnt exists");
+                    throw new FileNotException(ROOT . $this->configuration . " doesnt exists");
                 }
 
                 // require the desired file
