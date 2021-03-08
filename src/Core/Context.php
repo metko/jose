@@ -88,11 +88,13 @@ class Context {
 
         return self::$instance;
     }
-    
+
     /**
      * Get the config key from config
      *
      * @return array
+     * @throws Exceptions\ConfigIsNotArrayException
+     * @throws FileNotException
      */
     private function get_user_context(): array
      {
