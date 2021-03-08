@@ -6,9 +6,8 @@
     - [Utilisation](getting-started/utilisation.md)
 
 - Concepts
-    - [Templates](concepts/templates.md)
-    - [Taxonomies](concepts/taxonomies.md)
     - [Post types](concepts/post-type.md)
+    - [Taxonomies](concepts/taxonomies.md)
     - [Models](concepts/models.md)
     - [Images](concepts/images.md)
     - [Block](concepts/blocks.md)

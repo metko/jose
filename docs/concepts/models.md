@@ -23,7 +23,7 @@ class BookModel extends Model {
 
             $this->_author_name = $field
         }
-        return $this->_author_name
+        return $this->_author_name;
     }
 }
 ```

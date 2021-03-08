@@ -32,6 +32,8 @@ return [
     'block_path' => "jose/Blocks",
     'acf_fields_path' => "jose/Fields",
     'context_path' => "jose/context.php",
+    "post_type_path" => "jose/PostType",
+    "taxonomies_path" => "jose/Taxonomies",
 
 
     // Create spots name for menu and, assign page on the bo abnd call them with 
@@ -84,7 +86,6 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    "post_type_path" => "jose/PostType",
-    "taxonomies_path" => "jose/Taxonomies",
+
 
 ];

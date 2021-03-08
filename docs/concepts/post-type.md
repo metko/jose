@@ -2,11 +2,7 @@
 
 One of the most powerful features of wordpress is the process of the post type. Jose handle the creation of them very easly.
 
-- First, make sur you have declared the `post_type_path` in your config file.
 
-```php
- "post_type_path" => '/app/PostType'
-```
 
 > Make sure to have a file name equal to your class and to enabled namespacing loading in your composer.
 
@@ -31,9 +27,9 @@ That's it!
 Now, you can pass other options like the public name, and the public plural name if needed
 
 ```php
-
-public static $public_name = "livre";
-public static $public_plural_name = "Livressssss";
+public static $name = "categories";
+public static $public_name = "Categories";
+public static $public_plural_name = "Category";
 
 ```
 
@@ -91,11 +87,11 @@ class Book extends PostType {
         // you can use some helpfull method of worpdress
 
         // if (is_single()) {
-            // bla bla bla
-        }
+            // do your stuff
+        //}
 
         // don't forget to return the query
-        return $query    
+        return $query;
     }
 }
 ```
