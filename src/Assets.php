@@ -21,8 +21,9 @@ class Assets {
         $this->config = Config::getInstance()->get("assets");
 
         if($this->config['manifest']) {
-            if(Finder::getInstance()->fileExists(get_template_directory() . '/assets/'.$this->config['manifest'])) {
-                $this->manifest = json_decode(file_get_contents(get_template_directory() . '/assets/'.$this->config['manifest']), true);
+            if(Finder::getInstance()->file_exists(
+                    get_template_directory() . '/'.$this->config['dist_folder'].'/'.$this->config['manifest'])) {
+                $this->manifest = json_decode(file_get_contents(get_template_directory() . '/'.$this->config['dist_folder'].'/'.$this->config['manifest']), true);
             }else {
                 throw new ManifestAssetsNotFound();
             }
@@ -103,21 +104,36 @@ class Assets {
         wp_register_script($groupe, $this->assetPath($file), [], '1.0.0', true);
         wp_enqueue_script($groupe);
     }
-    
+
     /**
-     * js
      *
-     * @param  mixed $file
-     * @param  mixed $groupe
-     * @return void
+     * @param $key
+     * @return string
      */
-    public function assetPath($key) {
-        if($this->manifest) {
-            return get_stylesheet_directory_uri() . '/assets' . $this->manifest[$key];
+    public function assetPath($key): string
+    {
+        if ($this->manifest && array_key_exists($key, $this->manifest)) {
+            return get_stylesheet_directory_uri() . '/' . $this->config['dist_folder'] . $this->manifest[$key];
         } else {
-            return get_stylesheet_directory_uri() . '/assets/' . $key;
+            return get_stylesheet_directory_uri() . '/' . $this->config['dist_folder'] . '/' . $key;
         }
+    }
      
+    /**
+
+
+    /**
+     * For twig media path
+     * @param $key
+     * @return string
+     */
+    public function img_url($key): string
+    {
+        if( $this->manifest ) {
+            return get_stylesheet_directory_uri() . '/' . $this->config['dist_folder'] .'/images/' .$key;
+        } else {
+            return get_stylesheet_directory_uri() . '/' . $this->config['dist_folder'] . '/' . $key;
+        }
     }
 
     

@@ -55,7 +55,7 @@ return [
     'image_size' => [
         "small" => '400x400'
     ],
-    
+
     /*
     |--------------------------------------------------------------------------
     | Assets
@@ -68,7 +68,8 @@ return [
     */
     'assets' => [
 
-        "manifest" => false,
+        "manifest" => null,
+        "dist_folder" => 'dist',
 
         'css' => [
             'app.css',
