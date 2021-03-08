@@ -1,5 +1,5 @@
 {
-    "name": "twn/jose",
+    "name": "toto/jose",
     "description": "A simple bundler for bedrock. Documentation incoming",
     "keywords": [
         "wordpress",
@@ -22,7 +22,9 @@
         "symfony/finder": "^5.1",
         "symfony/var-dumper": "^5.1",
         "timber/timber": "^1.18",
-        "composer/installers": "^1.0@dev"
+        "composer/installers": "^1.0@dev",
+        "stoutlogic/acf-builder": "1.11.0",
+        "palmiak/timber-acf-wp-blocks" : "1.14"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.0"
