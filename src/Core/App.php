@@ -10,8 +10,10 @@ use Jose\Utils\Config;
 use Timber\Timber;
 
 class App extends \Timber\Site {
-    
-    public $context = [];
+
+    // Represent the Context oject instance
+    private $context = null;
+
 
     public function __construct($site_name_or_id = null) 
     {
@@ -61,6 +63,7 @@ class App extends \Timber\Site {
         (new JoseBlocks())->init();
 
 
+
         // *****************    
         // Create default contet
         // // TODO Reset choose a way to handle the error template
@@ -69,38 +72,44 @@ class App extends \Timber\Site {
         // $whoops->register();
         new Timber();
         parent::__construct($site_name_or_id);
-        
+
+        $this->context = Context::getInstance();
+
     }
-    
+
     /**
      * Pass varibale into the context
      *
-     * @param  mixed $param1 
+     * @param  mixed $param1
      * @param  mixed $param2
      * @return self
      */
-    public function pass($param1 = null, $param2 = null) 
+    public function pass($param1 = null, $param2 = null): App
     {
-
-        Context::getInstance()->pass($param1, $param2);
+        $this->context->pass($param1, $param2);
         return $this;
-        
     }
-   
+
+    /**
+     * @return array
+     */
+    public function get_context(): array
+    {
+        $this->autoInjectModelToContext();
+        return $this->context->get();
+    }
+
     /**
      * Use Timber render function to output twig file, with context and cache
      *
-     * @param  mixed $template
-     * @return 
+     * @param mixed $template
+     * @param array $context
+     * @return void
      */
-    public function render(String $template, $context = []) 
+    public function render(String $template, $context = [])
     {
-    
-        // merge the 2
-        $this->context = array_merge(Context::getInstance()->get(), $context);
-        $this->autoInjectModelToContext();
-
-        Timber::render($template.'.twig', $this->context);
+        $context = array_merge( $this->get_context(), $context);
+        Timber::render($template.'.twig', $context);
     }
 
     //TODO
@@ -112,14 +121,17 @@ class App extends \Timber\Site {
      */
     public function autoInjectModelToContext() 
     {
+        if(is_page_template() && count( $this->context->get()['posts'])) {
 
-        if(is_singular()) {
+            $page = $this->context->get()['posts'][0];
+            $this->context->pass('post', $page);
+            $this->context->pass('wp_title', $page->post_title);
+        }
+        if(is_singular() && count(  $this->context->get()['posts'])) {
             // TODO
-            // dump('im a page or a single');
-            $singular_post = $this->context['posts'][0];
-            $this->context['post'] = $singular_post;
-            $this->context['wp_title'] = $singular_post->title;
-            // dump($context);
+            $singular_post =  $this->context->get()['posts'][0];
+            $this->context->pass('post', $singular_post);
+            $this->context->pass('wp_title', $singular_post->post_title);
         }
 
         if(is_404()) {
