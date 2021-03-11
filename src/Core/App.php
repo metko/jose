@@ -144,15 +144,15 @@ class App  {
     private function beforeRender()
     {
         RegisterMenu::getMenus();
-        if(is_page_template() && count( $this->context->get()['posts'])) {
+        if(is_page_template() && count( $this->context->get('posts'))) {
 
-            $page = $this->context->get()['posts'][0];
+            $page = $this->context->get('posts')[0];
             $this->context->pass('post', $page);
             $this->context->pass('wp_title', $page->post_title);
         }
-        if(is_singular() && count(  $this->context->get()['posts'])) {
+        if(is_singular() && count(  $this->context->get('posts'))) {
             // TODO
-            $singular_post =  $this->context->get()['posts'][0];
+            $singular_post =  $this->context->get('posts')[0];
             $this->context->pass('post', $singular_post);
             $this->context->pass('wp_title', $singular_post->post_title);
         }

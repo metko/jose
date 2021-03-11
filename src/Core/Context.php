@@ -42,7 +42,7 @@ class Context {
      * @param $key
      * @return array|string
      */
-    public function get($key)
+    public function get($key = null)
     {
         $keys = explode('.', $key);
 
