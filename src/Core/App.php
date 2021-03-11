@@ -122,12 +122,26 @@ class App  {
                 'page'];
         }
 
+        if(is_single()) {
+            return [
+                'single-'.$context['post']->slug,
+                'single-'.$context['post']->ID,
+                'single-'.get_post_type(),
+                'single'
+            ];
+        }
+
         // if it's archive post type
         if(is_archive() || is_post_type_archive() ) {
             return [
                 'archive-'.get_post_type(),
                 'archive'
             ];
+        }
+
+        if(is_front_page()) {
+            Context::getInstance()->pass('wp_title',  Context::getInstance()->get('site')->name );
+            return ['archive'];
         }
 
         return 'something...';
@@ -150,7 +164,7 @@ class App  {
             $this->context->pass('post', $page);
             $this->context->pass('wp_title', $page->post_title);
         }
-        if(is_singular() && count(  $this->context->get('posts'))) {
+        if((is_singular() || is_single()) && count(  $this->context->get('posts'))) {
             // TODO
             $singular_post =  $this->context->get('posts')[0];
             $this->context->pass('post', $singular_post);
@@ -159,6 +173,11 @@ class App  {
 
         if(is_404()) {
         }
+
+        if(is_front_page()) {
+            $this->context->pass('wp_title',  'Homepage');
+        }
+
         return $this->context->get();
     }
 
