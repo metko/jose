@@ -2,13 +2,12 @@
 
 namespace Jose\Core;
 
-use DirectoryIterator;
 use Jose\Core\Exceptions\FolderDoesntExistException;
 use Jose\Utils\Config;
 use Jose\Utils\Finder;
 use Timber\Timber;
 
-class JoseACFFields {
+class ACFFields {
 
 
     /**
@@ -41,8 +40,6 @@ class JoseACFFields {
         }
 
         foreach ( Finder::getInstance()->getFiles(ROOT.$this->acf_fields_path) as $file ) {
-            //dump($file);
-            // Get file path
             $file_path = $file->getPathname();
             require_once($file_path);
         }
@@ -70,5 +67,57 @@ class JoseACFFields {
         add_filter('acf/settings/save_json', [$this, 'acf_json_save']);
 
     }
+
+}
+
+
+class BuildACFFields extends \StoutLogic\AcfBuilder\FieldsBuilder {
+
+    protected $name = null;
+
+    /**
+     * @var false
+     */
+    private $is_block;
+
+    /**
+     * BuildACFFields constructor.
+     * @param $name
+     * @param false $block
+     */
+    public function __construct($name, $block = false) {
+        $this->name = $name;
+        $this->is_block = $block;
+        parent::__construct($name);
+    }
+
+    /**
+     * Create the fields group and assign it automaticaly to the block if it's one
+     */
+    public function create(): ?BuildACFFields
+    {
+        if($this->is_block) {
+            $this->setLocation("block", "==", "acf/$this->name");
+        }
+        acf_add_local_field_group($this->build());
+        return null;
+
+    }
+
+    /**
+     * @param $callback
+     * Callback to filter data before render
+     * @return BuildACFFields
+     */
+    public function filter($callback ): BuildACFFields
+    {
+
+        add_filter( "timber/acf-gutenberg-blocks-data/$this->name", function( $context) use ($callback){
+             return $callback->call($this, $context);
+        });
+
+        return $this;
+    }
+
 
 }

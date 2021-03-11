@@ -11,16 +11,29 @@ use Timber\Timber;
 
 class Context {
 
-    public $finder = null;
-
     public static $instance = null;
 
     public $context = [];
 
+    /**
+     * getInstance
+     */
+    public static function getInstance(): Context
+    {
+        if( ! self::$instance ) {
+            self::$instance = new Context();
+        }
+        return self::$instance;
+    }
 
-    public function __construct() {
-        $this->finder = Finder::getInstance();
-        $this->context = $this->get_user_context();
+
+
+
+    public  function setContext() {
+        $context = array_merge(Timber::context(), $this->get_user_context());
+        Timber::$context_cache = [];
+        $this->context = $context;
+        return $this;
     }
  
 
@@ -30,9 +43,9 @@ class Context {
      */
     public function get(): array
     {
-        $context = array_merge(Timber::context() ,$this->context);
-        Timber::$context_cache = [];
-        return $context;
+        return $this->context;
+//        $context = array_merge(Timber::context() ,$this->context);
+//        return $context;
     }
 
     /**
@@ -75,19 +88,7 @@ class Context {
 
 
     
-    /**
-     * getInstance
-     *
-     * @return void
-     */
-    public static function getInstance(): Context 
-    {
-        if( ! self::$instance ) {
-            self::$instance = new Context();
-        }
 
-        return self::$instance;
-    }
 
     /**
      * Get the config key from config
@@ -96,12 +97,13 @@ class Context {
      * @throws Exceptions\ConfigIsNotArrayException
      * @throws FileNotException
      */
-    private function get_user_context(): array
+    protected function get_user_context(): array
      {
+        $finder = Finder::getInstance();
         $context_path = Config::getInstance()->get('context_path');
         if($context_path) {
-            if($this->finder->file_exists(ROOT . $context_path)) {
-                return $this->finder->require(ROOT . $context_path);
+            if($finder->file_exists(ROOT . $context_path)) {
+                return $finder->require(ROOT . $context_path);
             }else {
                 return [];
                 throw new FileNotException(ROOT . $context_path . " doesnt exists");

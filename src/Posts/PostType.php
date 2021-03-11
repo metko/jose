@@ -30,7 +30,8 @@ class PostType extends Post {
         // // generer les arguments
         $arguments = $this->get_arguments();
         $arguments['labels'] = $labels;
-        
+
+
         register_post_type($this->name, $arguments);
         
         // get instance of post class map
@@ -140,8 +141,8 @@ class PostType extends Post {
             'query_var' => $this->get_class_property('query_var') ?? true,
             // 'capability_type' => [$public_name, $plural_name],
             'has_archive' => $this->get_class_property('has_archive') ?? true,
-            'hierarchical' => $this->get_class_property('hierarchical') ?? true,
-            'menu_position' => $this->get_class_property('hierarchical') ?? null,
+            'hierarchical' => $this->get_class_property('hierarchical') ?? false,
+            'menu_position' => $this->get_class_property('menu_position') ?? 5,
             'show_in_rest' => $this->get_class_property('show_in_rest') ?? true,
             'menu_icon' => $this->get_class_property('menu_icon') ?? 'dashicons-block-default',
             'supports' => $this->get_class_property('supports') ?? ['title', 'page-attributes', 'thumbnail','revisions', 'editor', 'excerpt']

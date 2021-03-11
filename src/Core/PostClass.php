@@ -53,11 +53,10 @@ class PostClass {
      */
     public function init(): void
     {
-
         $this->regiser_posts_types($this->post_type_path);
         $this->regiser_posts_types($this->taxonomies_path);
-
     }
+
 
   
     /**

@@ -8,7 +8,7 @@ use Jose\Utils\Config;
 use Jose\Utils\Finder;
 use Timber\Timber;
 
-class JoseBlocks {
+class Blocks {
 
 
     /**
@@ -20,23 +20,25 @@ class JoseBlocks {
      */
     private $TwigBlock;
 
+    /**
+     * Blocks constructor.
+     */
     public function __construct() {
         if(! $this->blocks_path = Config::getInstance()->get("block_path") ) {
             $this->blocks_path = 'jose/Blocks';
         }
     }
 
+    /**
+     *
+     */
     public function init() {
         if( ! $this->blocks_path) return;
-
         add_filter( 'timber/acf-gutenberg-blocks-templates', function () {
             return [ ROOT.$this->blocks_path]; // default: ['views/blocks']
         } );
 
-        if ( function_exists( 'add_action' ) && function_exists( 'acf_register_block' ) ) {
-            add_action( 'acf/init', [$this, 'timber_block_init'], 10, 0 );
-        }
-
+        $this->timber_block_init();
 
     }
 
@@ -48,6 +50,7 @@ class JoseBlocks {
 
         // Get an array of directories containing blocks.
         $directories = timber_block_directory_getter();
+
         // Check whether ACF exists before continuing.
         foreach ( $directories as $dir ) {
             // Sanity check whether the directory we're iterating over exists first.

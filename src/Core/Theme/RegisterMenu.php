@@ -9,31 +9,37 @@ use Timber\Timber;
 class RegisterMenu {
 
 
+   public static $menus = null;
   
    public function init () {
-      add_action('after_setup_theme', [$this, 'register_menus' ]);
+       $this->register_menus();
    }
 
    /**
-    * Register a new image size options to the list of selectable sizes in the Media Library
-    *
-    * @param $sizes
-    *
-    * @return array
+    * Register menus
+    **
     */
    public function register_menus()
    {
 
       $menus = Config::getInstance()->get('menus_slot');
-      $allMenus = [];
-
       foreach($menus as $menu_name => $menu_description) {
          register_nav_menu($menu_name, __($menu_description, "jose"));
-         $allMenus[$menu_name] =  new \Timber\Menu($menu_name);
       }
 
-      Context::getInstance()->pass('menus', $allMenus );
+   }
 
+   public static function getMenus() {
+       $menus = Config::getInstance()->get('menus_slot');
+
+
+       $allMenus = [];
+       foreach($menus as $menu_name => $menu_description) {
+           $allMenus[$menu_name] = new \Timber\Menu($menu_name);
+       }
+       self::$menus = $allMenus;
+
+       Context::getInstance()->pass("menus", self::$menus);
    }
 
 }

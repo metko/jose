@@ -3,91 +3,92 @@
 namespace Jose;
 
 use ErrorException;
-use Jose\Core\Context;
-use Jose\Core\Exceptions\DependencyMissingException;
+use Jose\Core\ACFFields;
+use Jose\Core\App;
+use Jose\Core\Blocks;
+use Jose\Core\PostClass;
+use Jose\Core\PostClassMap;
+use Jose\Core\Theme\RegisterMenu;
+use Jose\Core\Theme\Theme;
+use Jose\Core\Views;
 use Jose\Utils\Config;
 use Timber\Timber;
 
 class Jose {
-    
-    /**
-     * If the app has already been inited
-     *
-     */
-    private static $instance = null;
+
 
     /**
-     * Get  the instance of the global app
-     *
+     * @var bool
+     * If Jose has been inited
      */
-    public static function app($config = null): \Jose\Core\App
+    public static $hasInit = false;
+
+
+    /**
+     * @return App|null
+     * @throws ErrorException
+     */
+    public static function app(): ?App
     {
-        if( ! self::$instance) {
+        if( ! self::$hasInit) {
+            throw new ErrorException('Must init jose first');
+        }
+        return App::getInstance()->app();
+    }
+
+
+    /**
+     * @param null $config
+     * @throws Core\Exceptions\ConfigIsNotArrayException
+     * @throws Core\Exceptions\FileNotException
+     * @throws Core\Exceptions\ManifestAssetsNotFound
+     * @throws ErrorException
+     */
+    public static function init($config = null)
+    {
+        if( ! self::$hasInit ) {
             // need to check
             if(self::checkRequirments() ) {
-                if($config) {
-                    self::config($config);
-                }
-                self::$instance = new \Jose\Core\App();
-            }  
+               self::registerClass($config);
+               self::$hasInit = true;
+            }
+        }else {
+            throw new ErrorException('You already init jose');
         }
-        return self::$instance;
+
+    }
+
+    /**
+     * @param $config
+     * @throws Core\Exceptions\ConfigIsNotArrayException
+     * @throws Core\Exceptions\FileNotException
+     * @throws Core\Exceptions\ManifestAssetsNotFound
+     * @throws ErrorException
+     */
+    private static function registerClass($config) {
+        require(dirname(__DIR__).'/src/Utils/constants.php');
+        require(dirname(__DIR__).'/src/Utils/helpers.php');
+        Config::getInstance()->init($config);
+        Assets::getInstance()->init();
+        (new Views())->init();
+        add_action( 'init', function ()  {
+            (new Theme())->init();
+            (new RegisterMenu())->init();
+
+            if ( function_exists( 'add_action' ) && function_exists( 'acf_register_block' ) ) {
+                (new ACFFields())->init();
+                (new Blocks())->init();
+            }
+
+            (new PostClass())->init();
+            PostClassMap::getInstance()->apply();
+        });
     }
 
 
     /**
-     * config Set custom config file
-     *
-     * @param  mixed $config
-     * @return void
-     */
-    public static function config($config)
-    {
-        return Config::getInstance()->define($config);
-    }
-
-    
-    /**
-     * init App init
-     *
-     * @param  mixed $config
-     * @return void
-     */
-    public static function init($config = null): void
-    {
-        // dump('::init()');
-        if( ! self::$instance) {
-            // need to check
-            if(self::checkRequirments() ) {
-                if($config) {
-                    self::config($config);
-                }
-                self::$instance = new \Jose\Core\App();
-                // self::$instance->init_theme();
-            }  
-        }
-    }
-    
-    /**
-     * get_config return current config
-     *
-     * @param  mixed $key
-     * @return void
-     */
-    public static function get_config($key = null)
-    {
-        return Config::getInstance()->get($key);
-    }
-    
-    /**
-     * Check all the necessary php version, lib etc here....
-     *
-     * @return bool
-     */    
-    /**
-     * checkRequirments
-     *
-     * @return bool
+     * @return bool|null
+     * @throws ErrorException
      */
     private static function checkRequirments(): ?bool
     {

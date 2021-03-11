@@ -26,7 +26,6 @@ class CacheHandler {
         if(is_null($this->config) || !is_array($this->config) ) {
             $this->config = [];
         } 
-
         $this->initTimberCache();
         
     }
@@ -52,8 +51,7 @@ class CacheHandler {
 
       
         if(WP_ENV == "development"){
-
-            if($this->get('in_development') == true ) {
+            if($this->get('in_development') != true ) {
                 $this->setCacheLocation();
                 $loader = new Loader(); 
                 $loader->clear_cache_twig();   

@@ -29,8 +29,12 @@ class Assets {
             }
         }
 
-        add_action('wp_enqueue_scripts', [$this, 'registerMainScripts']);
+        $this->registerMainScripts();
+
     }
+
+
+
     
     /**
      * loadDefaultScript
@@ -83,8 +87,13 @@ class Assets {
         if(!$groupe) {
             $groupe = $this->getGroup($file);
         }
-        wp_register_style($groupe,  $this->assetPath($file), null);
-        wp_enqueue_style($groupe);
+
+        add_action('wp_enqueue_scripts', function() use($groupe, $file){
+            wp_register_style($groupe,  $this->assetPath($file), '1.0.0', true);
+            wp_enqueue_style($groupe);
+        });
+
+
     }
  
     /**
@@ -100,9 +109,11 @@ class Assets {
             $groupe = $this->getGroup($file);
         }
 
-        
-        wp_register_script($groupe, $this->assetPath($file), [], '1.0.0', true);
-        wp_enqueue_script($groupe);
+        add_action('wp_enqueue_scripts', function() use($groupe, $file){
+            wp_register_script($groupe, $this->assetPath($file), [], '1.0.0', true);
+            wp_enqueue_script($groupe);
+        });
+
     }
 
     /**

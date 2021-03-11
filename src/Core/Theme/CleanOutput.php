@@ -8,12 +8,13 @@ class CleanOutput {
 
     public function __construct() {
         $this->cleanOutput();
+        $this->head_cleanup();
     }
 
     // *******************
     // All the filter and actions to remove what we want =)
     public function cleanOutput() {
-        add_action('init',  [$this, 'head_cleanup']);
+
   
          // *******************
          // CLEAN THEME
@@ -27,8 +28,9 @@ class CleanOutput {
          add_action('get_bloginfo_rss', [$this, 'remove_default_description']);
          add_action('script_loader_src', [$this, 'remove_script_version']);
          add_action('style_loader_src', [$this, 'remove_script_version']);
-         add_action('wp_enqueue_scripts', [$this, 'registerScripts']);
-         // add_action('wp_enqueue_scripts', [$this, 'remove_block_library_css']);
+         add_action('wp_enqueue_scripts', [$this, 'removeRegisterScript']);
+         add_action('wp_enqueue_scripts', [$this, 'remove_block_library_css']);
+         add_action('wp_enqueue_scripts', [$this, 'remove_block_library_css']);
          // END CLEAN THEME
          // *******************
   
@@ -93,7 +95,11 @@ class CleanOutput {
   
      public function remove_block_library_css()
      {
-        wp_dequeue_style('wp-block-library');
+         if(!is_admin()) {
+             wp_dequeue_style('wp-block-library');
+             wp_dequeue_style( 'wp-block-library-theme' );
+             wp_dequeue_style( 'wc-block-style' ); // Re
+         }
      }
   
      /**
@@ -155,7 +161,7 @@ class CleanOutput {
         return array_merge($args, $nav_menu_args);
      }
   
-     public function registerScripts()
+     public function removeRegisterScript()
      {
         remove_action('wp_head', 'wp_print_scripts');
         remove_action('wp_head', 'wp_print_head_scripts', 9);

@@ -3,6 +3,7 @@
 namespace Jose\Utils;
 
 use ErrorException;
+use Jose\Core\Exceptions\ConfigIsNotArrayException;
 use Jose\Core\Exceptions\FileNotException;
 
 class Config
@@ -43,60 +44,81 @@ class Config
     {
         $this->finder = Finder::getInstance();
     }
-    
+
+
     /**
-     * Get conf array by key / or all the conf
-     *
-     * @param  string $key
-     * @return array|null
+     * @param null $key
+     * @return array|string|null
      */
     public function get($key = null)
     {
-        if ($key) {
-            if (array_key_exists($key, $this->config)) {
+        $keys = explode('.', $key);
+
+        if (count($keys)) {
+
+            if(count($keys) == 1) {
+                if (array_key_exists($key, $this->config)) {
+                    return $this->config[$key];
+                }
+            }
+
+            if (! accessibleArray($this->config)) {
+                return $this->config;
+            }
+
+            if (is_null($key)) {
+                return $this->config;
+            }
+
+            if (existKeyInArray($this->config, $key)) {
                 return $this->config[$key];
             }
-            return null;
+
+            if (strpos($key, '.') === false) {
+                return $this->config[$key] ?? $this->config;
+            }
+
+            foreach (explode('.', $key) as $segment) {
+                if (accessibleArray($this->config) && existKeyInArray($this->config, $segment)) {
+                    $this->config = $this->config[$segment];
+                } else {
+                    return $this->config;
+                }
+            }
+
+            return $this->config;
+
         } else {
             return $this->config;
         }
     }
- 
+
+
     /**
-     * Get config instance object
-     *
-     * @return \Jose\Utils\Config
+     * @return Config|null
      */
-    public static function getInstance(): \Jose\Utils\Config
+    public static function getInstance(): ?Config
     {
         if (!self::$instance) {
-     
             self::$instance = new Config();
-
         }
       
         return self::$instance;
     }
 
     /**
-     * Set a configuration array, or file path
-     *
-     * @param  string|array $config
-     * @return void
-     */
-    public function define($config): void
-    {
-        $this->configuration = $config;
-    }
-
-    /**
      * Init the configuration object of the app
-     * 
-     *
-     * @return void
+     * @param $config
+     * @throws ErrorException
+     * @throws FileNotException
+     * @throws ConfigIsNotArrayException
      */
-    public function init()
+    public function init($config)
     {
+        if($config) {
+            $this->configuration = $config;
+        }
+
         // Rirst, check if conf_path is defined
         if ($this->configuration) {
 

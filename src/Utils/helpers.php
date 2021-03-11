@@ -1,58 +1,120 @@
 <?php
 
 use Jose\Assets;
-
-/**
- * Return url of compiled style or script file
- *
- * @since 1.0.0
- *
- * @param $assets
- *
- * @return String
- */
-function asset($asset)
-{       
-    return Assets::getInstance()->assetPath($asset);
-}
-
-/**
- * Return random string
- *
- * @since 1.9.0
- *
- * @param int $length
- * @return String
- */
-function random_string($length)
-{
-    return substr(bin2hex(random_bytes($length)), 0, $length);
-}
+use Jose\Core\App;
+use Jose\Jose;
 
 
-/**
- * Convert a path into a namespace 
- *
- * @param  string $path
- * @return string
- */
-function pathToNamespace(string $path) :string
-{
-    $namespaceArray = explode('/', $path);
-    $namespacePath = "\\";
-    foreach($namespaceArray as $key) {
-        $namespacePath .= ucfirst($key);
-        $namespacePath .= "\\";
+if( ! function_exists('pathToNamespace')) {
+    /**
+     * Convert a path into a namespace
+     *
+     * @param  string $path
+     * @return string
+     */
+    function pathToNamespace(string $path) :string
+    {
+        $namespaceArray = explode('/', $path);
+        $namespacePath = "\\";
+        foreach($namespaceArray as $key) {
+            $namespacePath .= ucfirst($key);
+            $namespacePath .= "\\";
+        }
+
+        return $namespacePath;
     }
-
-    return $namespacePath;
 }
 
 
-function jose()  {
-    return \Jose\Jose::app();
+
+if( ! function_exists('jose')) {
+
+    /**
+     * @return App|null
+     * @throws ErrorException
+     */
+    function jose(): ?App
+    {
+        return Jose::app();
+    }
 }
-function context()  {
-    return jose()->get_context();
+
+if( ! function_exists('j_context')) {
+    /**
+     * @return array
+     * @throws ErrorException
+     */
+    function j_context(): array
+    {
+        return jose()->context();
+    }
 }
+
+
+if( ! function_exists('j_config')) {
+    /**
+     * @param null $key
+     * @return array|string|null
+     * @throws ErrorException
+     */
+    function j_config($key = null)
+    {
+        return jose()->config($key);
+    }
+}
+
+if( ! function_exists('j_style')) {
+    /**
+     * @param null $key
+     * @return array|string|null
+     * @throws ErrorException
+     */
+    function j_style($key = null)
+    {
+        return Assets::getInstance()->css($key);
+    }
+}
+
+if( ! function_exists('j_script')) {
+    /**
+     * @param null $key
+     * @return array|string|null
+     * @throws ErrorException
+     */
+    function j_script($key = null)
+    {
+        return Assets::getInstance()->js($key);
+    }
+}
+
+if( ! function_exists('accessibleArray')) {
+
+    /**
+     * @param $value
+     * @return bool
+     */
+    function accessibleArray($value): bool
+    {
+        return is_array($value) || $value instanceof ArrayAccess;
+    }
+}
+
+if( ! function_exists('existKeyInArray')) {
+
+    /**
+     * @param $array
+     * @param $key
+     * @return bool
+     */
+    function existKeyInArray($array, $key): bool
+    {
+        if ($array instanceof ArrayAccess) {
+            return $array->offsetExists($key);
+        }
+        return array_key_exists($key, $array);
+    }
+}
+
+
+
 
