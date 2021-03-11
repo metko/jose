@@ -41,12 +41,13 @@ if( ! function_exists('jose')) {
 
 if( ! function_exists('j_context')) {
     /**
-     * @return array
+     * @param null $key
+     * @return array|string|null
      * @throws ErrorException
      */
-    function j_context(): array
+    function j_context($key = null)
     {
-        return jose()->context();
+        return jose()->context($key);
     }
 }
 
@@ -67,7 +68,6 @@ if( ! function_exists('j_style')) {
     /**
      * @param null $key
      * @return array|string|null
-     * @throws ErrorException
      */
     function j_style($key = null)
     {

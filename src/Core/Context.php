@@ -35,17 +35,56 @@ class Context {
         $this->context = $context;
         return $this;
     }
- 
+
 
     /**
      * Get the timber context merged to user context
-     *
+     * @param $key
+     * @return array|string
      */
-    public function get(): array
+    public function get($key)
     {
+        $keys = explode('.', $key);
+
+        if (count($keys)) {
+
+            if(count($keys) == 1) {
+                if (array_key_exists($key, $this->context)) {
+                    return $this->context[$key];
+                }
+            }
+
+            if (! accessibleArray($this->context)) {
+                return $this->context;
+            }
+
+            if (is_null($key)) {
+                return $this->context;
+            }
+
+            if (existKeyInArray($this->context, $key)) {
+                return $this->context[$key];
+            }
+
+            if (strpos($key, '.') === false) {
+                return $this->context[$key] ?? $this->context;
+            }
+
+            foreach (explode('.', $key) as $segment) {
+                if (accessibleArray($this->context) && existKeyInArray($this->context, $segment)) {
+                    $this->context = $this->context[$segment];
+                } else {
+                    return $this->context;
+                }
+            }
+
+            return $this->context;
+
+        } else {
+            return $this->context;
+        }
         return $this->context;
-//        $context = array_merge(Timber::context() ,$this->context);
-//        return $context;
+
     }
 
     /**

@@ -36,11 +36,12 @@ class App  {
     }
 
     /**
-     * @return array
+     * @param null $key
+     * @return array|string
      */
-    public function context(): array
+    public function context($key = null)
     {
-        return Context::getInstance()->get();
+        return Context::getInstance()->get($key);
     }
 
     /**
