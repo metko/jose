@@ -128,7 +128,7 @@ class Taxonomy {
             'show_admin_column' =>  true,
             'show_in_rest'      =>  true,
             'query_var'         =>  true,
-            'rewrite'           => array( 'slug' => $this->name ?? $plural_name ),
+            'rewrite'           => array( 'slug' => strtolower($plural_name) ),
         );
         $this->arguments = array_merge($auto_arguments, $arguments);
         

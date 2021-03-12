@@ -128,7 +128,7 @@ class PostType {
         ];
 
         $auto_arguments['rewrite'] = [
-            'slug' =>  $plural_name,
+            'slug' =>  strtolower($plural_name),
             'with_front' => true,
         ];
 
