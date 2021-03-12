@@ -2,10 +2,11 @@
 
 namespace Jose\Core;
 
-use Jose\Assets;
 use Jose\Core\Theme\RegisterMenu;
-use Jose\Core\Theme\Theme;
+use Jose\Posts\PostType;
+use Jose\Posts\Taxonomy;
 use Jose\Utils\Config;
+use Jose\Utils\Finder;
 use Timber\Timber;
 
 class App  {
@@ -92,9 +93,8 @@ class App  {
             $template = $this->getTemplate($context);
         }
 
-
-
         $arrayTemplate = array_map([$this, 'add_extension'], is_array($template) ? $template: [$template]);
+
         return Timber::render($arrayTemplate, $context);
     }
 
@@ -201,6 +201,27 @@ class App  {
     public function addBlock($name )
     {
         return new BuildACFFields($name, true);
+    }
+
+    /**
+     * @param $name
+     * @return BuildACFFields
+     * Build ACF blocks
+     */
+    public function addPostType(String $name)
+    {
+        return (new PostType())->setName($name);
+    }
+
+    /**
+     * @param String $name
+     * @param array $postType
+     * @return BuildACFFields
+     * Build ACF blocks
+     */
+    public function addTaxonomy(String $name, Array $postType)
+    {
+        return (new Taxonomy())->setName($name, $postType);
     }
 
 }

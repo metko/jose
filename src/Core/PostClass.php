@@ -37,11 +37,11 @@ class PostClass {
     public function __construct() 
     {
         if(! $this->post_type_path = Config::getInstance()->get("post_type_path") ) {
-            $this->post_type_path = 'jose/PostType';
+            $this->post_type_path = 'ressources/PostType';
         }
 
         if(! $this->taxonomies_path = Config::getInstance()->get("taxonomies_path") ) {
-            $this->taxonomies_path = 'jose/Taxomies';
+            $this->taxonomies_path = 'ressources/Taxomies';
         }
     }
 
@@ -72,44 +72,26 @@ class PostClass {
         }
 
         foreach ( Finder::getInstance()->getFiles(ROOT.$path) as $file ) {
-
             // Get file path
-            $file_path = $file->getRelativePathname();
-
-            // Convert into a class namespace accessible
-            $class_name = pathToNamespace($path) . explode('.', $file_path)[0];
-            
-            // Then register the post type$$
-            $class = new $class_name();
-            $class ->register_post_type();
-           
-            
-            // If a post_model it's use, register it
-            if( property_exists( $class, "post_model" ) ) {
-               
-                $this->register_post_model($class);
-            }
+            require_once($file->getRealpath());
+//            // Convert into a class namespace accessible
+//            $class_name = pathToNamespace($path) . explode('.', $file_path)[0];
+//
+//            // Then register the post type$$
+//            $class = new $class_name();
+//            $class ->register_post_type();
+//
+//
+//            // If a post_model it's use, register it
+//            if( property_exists( $class, "post_model" ) ) {
+//
+//                $this->register_post_model($class);
+//            }
         }
     }
 
-    
-    /**
-     * register_post_model
-     *
-     * @param  string $class_name
-     * @return void
-     */
-    private function register_post_model (object $class) :void
-    {
-        $class_model = $class->post_model;
 
-        if( ! class_exists($class_model)) {
-            throw new ErrorException('Model '. $class->post_model .' doesnt exists');
-        }
-        //dump($class->name, $class->post_model);
-        // auto generate class model
-        PostClassMap::getInstance()->add([$class->name => $class->post_model]);
-    }
+
 
       
  

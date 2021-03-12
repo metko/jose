@@ -68,10 +68,11 @@ class Jose {
     private static function registerClass($config) {
         require(dirname(__DIR__).'/src/Utils/constants.php');
         require(dirname(__DIR__).'/src/Utils/helpers.php');
-        Config::getInstance()->init($config);
-        Assets::getInstance()->init();
-        (new Views())->init();
-        add_action( 'init', function ()  {
+
+        add_action( 'init', function () use($config)  {
+            Config::getInstance()->init($config);
+            Assets::getInstance()->init();
+            (new Views())->init();
             (new Theme())->init();
             (new RegisterMenu())->init();
 

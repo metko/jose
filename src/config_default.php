@@ -15,7 +15,7 @@ return [
     'cache' => [
         "in_production" => true,
         "in_development" => false,
-        "location" => "jose/Views/_cached",
+        "location" => "ressources/views/_cached",
     ],
 
     /*
@@ -26,7 +26,7 @@ return [
     | The folder of yours twig views
     |
     */    
-    'views_path' => "jose/Views",
+    'views_path' => "ressources/views",
 
     /*
     |--------------------------------------------------------------------------
@@ -36,7 +36,7 @@ return [
     | The folder of your guttenbergs views
     |
     */
-    'block_path' => "jose/Blocks",
+    'block_path' => "ressources/blocks",
 
     /*
     |--------------------------------------------------------------------------
@@ -46,7 +46,7 @@ return [
     | The folder of custom acf fields
     |
     */
-    'acf_fields_path' => "jose/Fields",
+    'acf_fields_path' => "ressources/fields",
 
     /*
     |--------------------------------------------------------------------------
@@ -56,7 +56,7 @@ return [
     | The path for you global context
     |
     */
-    'context_path' => "jose/context.php",
+    'context_path' => "ressources/context.php",
 
     /*
     |--------------------------------------------------------------------------
@@ -66,7 +66,7 @@ return [
     | The path for post type
     |
     */
-    "post_type_path" => "jose/PostType",
+    "post_type_path" => "ressources/post_types",
 
     /*
     |--------------------------------------------------------------------------
@@ -76,7 +76,7 @@ return [
     | The path for post type
     |
     */
-    "taxonomies_path" => "jose/Taxonomies",
+    "taxonomies_path" => "ressources/taxonomies",
 
 
     /*
