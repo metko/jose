@@ -182,15 +182,15 @@ class App  {
     }
 
 
-
     /**
-     * @param $name
+     * @param String $name
+     * @param array $groupConfig
      * @return BuildACFFields
      * Build ACF fields
      */
-    public function addFields($name): BuildACFFields
+    public function addFields(String $name, $groupConfig = []): BuildACFFields
     {
-        return new BuildACFFields($name);
+        return new BuildACFFields($name, false, $groupConfig);
     }
 
     /**

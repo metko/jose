@@ -82,13 +82,14 @@ class BuildACFFields extends \StoutLogic\AcfBuilder\FieldsBuilder {
 
     /**
      * BuildACFFields constructor.
-     * @param $name
-     * @param false $block
+     * @param String $name
+     * @param Boolean $block
+     * @param array $groupConfig
      */
-    public function __construct($name, $block = false) {
+    public function __construct(String $name, Bool $block, Array $groupConfig ) {
         $this->name = $name;
         $this->is_block = $block;
-        parent::__construct($name);
+        parent::__construct($name, $groupConfig);
     }
 
     /**
