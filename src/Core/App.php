@@ -195,12 +195,13 @@ class App  {
 
     /**
      * @param $name
+     * @param array $groupConfig
      * @return BuildACFFields
      * Build ACF blocks
      */
-    public function addBlock($name )
+    public function addBlock($name, $groupConfig = []): BuildACFFields
     {
-        return new BuildACFFields($name, true);
+        return new BuildACFFields($name, true, $groupConfig);
     }
 
     /**
