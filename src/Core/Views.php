@@ -17,16 +17,11 @@ class Views {
 
     public function setTimberViews() {
 
-        $views = Config::getInstance()->get('views_path');
+        $views = ROOT.Config::getInstance()->get('views_path');
+        $blocks = ROOT.Config::getInstance()->get('view_path');
 
-        //maybe it
-        if( !$views ) {
-            $views = ROOT."app/views";
-        } else {
-            $views = ROOT.$views;
-        }
 
-        Timber::$locations = $views;
+        Timber::$locations = [$views, $blocks];
     }
 
     public function setAddToTwigFunction() {
