@@ -82,7 +82,7 @@ class Jose {
             }
 
             (new PostClass())->init();
-            PostClassMap::getInstance()->apply();
+//            PostClassMap::getInstance()->apply();
         });
     }
 
