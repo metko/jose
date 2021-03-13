@@ -173,4 +173,16 @@ class PostType {
         return $this;
     }
 
+    /*
+    * Return call back on pre get post archive of this post_type
+    */
+    public function onArchive($callback) {
+        add_filter( 'pre_get_posts', function ($query) use($callback) {
+            if(!is_admin() && is_archive()  && $query->query['post_type'] === "event") {
+                return $callback->call($this, $query);
+            }
+        } );
+        return $this;
+    }
+
 }
