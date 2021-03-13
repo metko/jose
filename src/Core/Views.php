@@ -12,7 +12,8 @@ class Views {
 
     public function init() {
         $this->setTimberViews();
-        $this->setAddToTwigFunction();
+        add_filter( 'timber/twig', [ $this , 'setAddToTwigFunction'] );
+
     }
 
     public function setTimberViews() {
@@ -24,23 +25,13 @@ class Views {
         Timber::$locations = [$views, $blocks];
     }
 
-    public function setAddToTwigFunction() {
-        add_filter( 'timber/twig', [ $this , 'add_assets_url'] );
-
-    }
-
-    /**
-     * My custom Twig functionality.
-     *
-     * @param Environment $twig
-     * @return Environment
-     */
-    public  function add_assets_url(Environment $twig): Environment
-    {
-        // Adding a function.
+    public function setAddToTwigFunction(Environment $twig) {
         $twig->addFunction( new Twig_Function( 'img_url', [$this, 'img_url'] ) );
+        $twig->addFunction( new Twig_Function( 'dd', [$this, 'debugdie'] ) );
         return $twig;
     }
+
+
 
     /**
      * @param $key
@@ -49,6 +40,14 @@ class Views {
     public function img_url($key): string
     {
         return Assets::getInstance()->img_url($key);
+    }
+    /**
+     * @param $key
+     * @return string|void
+     */
+    public function debugdie($var): string
+    {
+        dd($var);
     }
 
 
