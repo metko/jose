@@ -19,8 +19,7 @@ class Views {
     public function setTimberViews() {
 
         $views = ROOT.Config::getInstance()->get('views_path');
-        $blocks = ROOT.Config::getInstance()->get('view_path');
-
+        $blocks = ROOT.Config::getInstance()->get('block_path');
 
         Timber::$locations = [$views, $blocks];
     }
@@ -28,6 +27,7 @@ class Views {
     public function setAddToTwigFunction(Environment $twig) {
         $twig->addFunction( new Twig_Function( 'img_url', [$this, 'img_url'] ) );
         $twig->addFunction( new Twig_Function( 'dd', [$this, 'debugdie'] ) );
+        $twig->addFunction( new Twig_Function( 'svg', [$this, 'include_svg'] ) );
         return $twig;
     }
 
@@ -41,6 +41,20 @@ class Views {
     {
         return Assets::getInstance()->img_url($key);
     }
+
+    /**
+     * @param $key
+     * @return string|void
+     */
+    public function include_svg($string, $class = null): string
+    {
+        //file_get_contents
+        $output = "<span class='".$class."'>";
+        $output .= file_get_contents($string);
+        $output .= "</span>";
+        return $output;
+    }
+
     /**
      * @param $key
      * @return string|void
