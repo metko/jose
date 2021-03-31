@@ -30,9 +30,12 @@ class Context {
 
 
     public  function setContext() {
-        $context = array_merge(Timber::context(), $this->get_user_context());
+        $newContext = $this->get_user_context();
+        add_filter( 'timber/context', function( $context ) use($newContext){
+            return array_merge($context, $newContext);
+        } );
+        $this->context = Timber::context();
         Timber::$context_cache = [];
-        $this->context = $context;
         return $this;
     }
 
