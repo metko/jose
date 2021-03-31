@@ -131,6 +131,14 @@ class App  {
             ];
         }
 
+        if(is_archive() && is_tax() ) {
+
+            return [
+                'taxonomy-'.get_queried_object()->taxonomy,
+                'taxonomy'
+            ];
+        }
+
         // if it's archive post type
         if(is_archive() || is_post_type_archive() ) {
             return [
