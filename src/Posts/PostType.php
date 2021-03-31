@@ -178,7 +178,7 @@ class PostType {
     */
     public function onArchive($callback) {
         add_filter( 'pre_get_posts', function ($query) use($callback) {
-            if(!is_admin() && is_archive()  && $query->query['post_type'] === "event") {
+            if(!is_admin() && is_archive()  && $query->query['post_type'] === $this->name) {
                 return $callback->call($this, $query);
             }
         } );
