@@ -13,6 +13,7 @@ class Taxonomy {
     public $name = null;
     public $public_name = null;
     public $plural_name = null;
+    public $slug = null;
     public $labels = null;
     public $arguments = null;
     public $hierarchical = null;
@@ -43,7 +44,6 @@ class Taxonomy {
         if( ! $this->post_types) {
             throw new MissingPostTypeInTaxonomiesException($this->name, get_called_class());
         }
-
         return register_taxonomy($this->name, $this->post_types ,$this->arguments);
 
     }
@@ -107,6 +107,17 @@ class Taxonomy {
         $this->hierarchical = $bool;
         return $this;
     }
+    /**
+     * get_post_type_public_name
+     *
+     * @param bool $bool
+     * @return Taxonomy
+     */
+    public function setSlug($string): Taxonomy
+    {
+        $this->slug = $string;
+        return $this;
+    }
 
 
     /**
@@ -128,7 +139,7 @@ class Taxonomy {
             'show_admin_column' =>  true,
             'show_in_rest'      =>  true,
             'query_var'         =>  true,
-            'rewrite'           => array( 'slug' => strtolower($plural_name) ),
+            'rewrite'           => array( 'slug' => $this->slug ?? strtolower($plural_name) ),
         );
         $this->arguments = array_merge($auto_arguments, $arguments);
         

@@ -10,6 +10,7 @@ class PostType {
     public $public_name = null;
     public $plural_name = null;
     public $icon = null;
+    public $slug = null;
     public $labels = null;
     public $arguments = null;
 
@@ -98,6 +99,18 @@ class PostType {
         return $this;
     }
 
+    /**
+     * get_post_type_public_name
+     *
+     * @param bool $bool
+     * @return Taxonomy
+     */
+    public function setSlug($string): Taxonomy
+    {
+        $this->slug = $string;
+        return $this;
+    }
+
 
     /**
      * Generate the post type arguments if needed
@@ -128,7 +141,7 @@ class PostType {
         ];
 
         $auto_arguments['rewrite'] = [
-            'slug' =>  strtolower($plural_name),
+            'slug' =>  $this->slug ?? strtolower($plural_name),
             'with_front' => true,
         ];
 
