@@ -105,7 +105,7 @@ class PostType {
      * @param bool $bool
      * @return Taxonomy
      */
-    public function setSlug($string): Taxonomy
+    public function setSlug($string): PostType
     {
         $this->slug = $string;
         return $this;
