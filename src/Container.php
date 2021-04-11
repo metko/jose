@@ -19,8 +19,7 @@ class Container
 
 
     public function __construct() {
-        require_once(ROOT_JOSE. 'helpers.php');
-        $this->defaultProviders = require_once(ROOT_JOSE. 'providers.php');
+        $this->defaultProviders = require_once(ROOT_JOSE. '/config/providers.php');
 
         // TODO add custom registrer providers from user config
 
@@ -49,7 +48,7 @@ class Container
      */
     public function getClassInstance($key, $params): object
     {
-        if($params) {
+        if ($params) {
             $reflect  = new \ReflectionClass($this->defaultProviders[$key]);
             $class = $reflect->newInstanceArgs($params);
         } else {

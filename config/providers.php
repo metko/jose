@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'app' => \Jose\App::class,
     'config' => \Jose\Config::class,
     'post_type' => \Jose\PostType\PostType::class,
     'post_type_class' => \Jose\PostType\PostTypeClassMap::class,
@@ -8,4 +9,6 @@ return [
     'acf_builder' => \StoutLogic\AcfBuilder\FieldsBuilder::class,
     'file' => \Symfony\Component\Filesystem\Filesystem::class,
     'finder' => \Symfony\Component\Finder\Finder::class,
+    'view' => \Jose\View::class,
+    'assets' => \Jose\Assets::class,
 ];

@@ -114,7 +114,7 @@ return [
     'assets' => [
 
         "manifest" => null,
-        "dist_folder" => 'dist',
+        "dist_folder" => null,
 
         'css' => [
             'app.css',

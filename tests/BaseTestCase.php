@@ -9,7 +9,7 @@ class BaseTestCase extends TestCase
 
     protected $container;
 
-    public function setUp()
+    public function setUp(): void
     {
 //        require(dirname(__DIR__).'/src/constants.php');
 //        require(dirname(__DIR__).'/src/helpers.php');

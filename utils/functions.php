@@ -7,10 +7,9 @@ use Jose\Container;
  */
 if (!function_exists('jose')) {
 
-    function jose($container_key, $params = null, $newInstance = false)
+    function jose($container_key = 'app', $params = null, $newInstance = false)
     {
         $container = Container::getInstance();
-
         return $container->get($container_key, $params, $newInstance);
     }
 }

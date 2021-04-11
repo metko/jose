@@ -12,7 +12,7 @@ class Config {
      * @var mixed
      */
     public function __construct() {
-        $this->config = require_once(ROOT_JOSE.'config.php');
+        $this->config = require_once(ROOT_JOSE.'/config/config.php');
     }
 
     /**
@@ -43,7 +43,14 @@ class Config {
             $user_config = array_merge($user_config, $config);
 
         }
-        $this->config = array_merge($this->config, $user_config);
+        foreach ($user_config as $k => $v) {
+            if (array_key_exists($k, $this->config)) {
+                $this->config[$k] = array_merge($this->config[$k], $v);
+            } else {
+                $this->config[$k] = $v;
+            }
+        }
+        //$this->config = array_merge($this->config, $user_config);
 
     }
 
@@ -54,43 +61,43 @@ class Config {
     public function get($key = null)
     {
         $keys = explode('.', $key);
-
+        $config = $this->config;
         if (count($keys)) {
 
             if(count($keys) == 1) {
-                if (array_key_exists($key, $this->config)) {
-                    return $this->config[$key];
+                if (array_key_exists($key, $config)) {
+                    return $config[$key];
                 }
             }
 
-            if (! accessibleArray($this->config)) {
-                return $this->config;
+            if (! accessibleArray($config)) {
+                return $config;
             }
 
             if (is_null($key)) {
-                return $this->config;
+                return $config;
             }
 
-            if (existKeyInArray($this->config, $key)) {
-                return $this->config[$key];
+            if (existKeyInArray($config, $key)) {
+                return $config[$key];
             }
 
             if (strpos($key, '.') === false) {
-                return $this->config[$key] ?? $this->config;
+                return $config[$key] ?? $config;
             }
 
             foreach (explode('.', $key) as $segment) {
-                if (accessibleArray($this->config) && existKeyInArray($this->config, $segment)) {
-                    $this->config = $this->config[$segment];
+                if (accessibleArray($config) && existKeyInArray($config, $segment)) {
+                    $config = $config[$segment];
                 } else {
-                    return $this->config;
+                    return $config;
                 }
             }
 
-            return $this->config;
+            return $config;
 
         } else {
-            return $this->config;
+            return $config;
         }
     }
 
