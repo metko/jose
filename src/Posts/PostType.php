@@ -117,7 +117,7 @@ class PostType {
      * @param array $arguments
      * @return PostType
      */
-    private function setArguments(Array $arguments): PostType
+    public function setArguments(Array $arguments): PostType
     {
         $this->checkNames();
         
