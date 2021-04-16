@@ -34,8 +34,31 @@ class Context {
         add_filter( 'timber/context', function( $context ) use($newContext){
             return array_merge($context, $newContext);
         } );
-        $this->context = Timber::context();
-        Timber::$context_cache = [];
+        $this->context['http_host'] = \Timber\URLHelper::get_scheme().'://'.\Timber\URLHelper::get_host();
+       // $this->context['wp_title'] = \Timber\Helper::get_wp_title();
+        $this->context['body_class'] = implode(' ', get_body_class());
+        $this->context['request'] = new \Timber\Request();
+        $user = new \Timber\User();
+        $this->context['user'] = ($user->ID) ? $user : false;
+        $this->context['posts'] = new \Timber\PostQuery();
+
+        /** 
+         * @deprecated as of Timber 1.3.0
+         * @todo remove in Timber 1.4.*
+         */
+        $this->context['wp_head'] = new \Timber\FunctionWrapper( 'wp_head' );
+        $this->context['wp_footer'] = new \Timber\FunctionWrapper( 'wp_footer' );
+
+        if (array_key_exists('site', $newContext) ) {
+            $this->context = array_merge($this->context, $newContext);
+        }else {
+            $this->context['site'] = new \Timber\Site();
+        }
+        $this->context['theme'] = $this->context['site']->theme;
+
+        //  dd($this->context);
+        \Timber\Timber::$context_cache = $this->context;
+        \Timber\Timber::$context_cache = apply_filters('timber_context', Timber::$context_cache);
         return $this;
     }
 

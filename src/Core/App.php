@@ -165,6 +165,7 @@ class App  {
      */
     private function beforeRender()
     {
+        $this->context->pass('wp_title', \Timber\Helper::get_wp_title());
         RegisterMenu::getMenus();
         if(is_page_template() && count( $this->context->get('posts'))) {
 
