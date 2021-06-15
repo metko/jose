@@ -124,4 +124,6 @@ return [
         ],
     ],
 
+    'enable_block_library' => false,
+
 ];

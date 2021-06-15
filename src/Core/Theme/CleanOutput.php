@@ -3,6 +3,7 @@
 namespace Jose\Core\Theme;
 
 use Jose\Core\Theme\NavWalker;
+use Jose\Utils\Config;
 
 class CleanOutput {
 
@@ -29,7 +30,6 @@ class CleanOutput {
          add_action('script_loader_src', [$this, 'remove_script_version']);
          add_action('style_loader_src', [$this, 'remove_script_version']);
          add_action('wp_enqueue_scripts', [$this, 'removeRegisterScript']);
-         add_action('wp_enqueue_scripts', [$this, 'remove_block_library_css']);
          add_action('wp_enqueue_scripts', [$this, 'remove_block_library_css']);
          // END CLEAN THEME
          // *******************
@@ -94,8 +94,9 @@ class CleanOutput {
      }
   
      public function remove_block_library_css()
-     {
-         if(!is_admin()) {
+     {   
+        $config = Config::getInstance();
+         if ($config->get('enable_block_library') == false && !is_admin()) {
              wp_dequeue_style('wp-block-library');
              wp_dequeue_style( 'wp-block-library-theme' );
              wp_dequeue_style( 'wc-block-style' ); // Re
