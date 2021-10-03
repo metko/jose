@@ -3,6 +3,7 @@ namespace Tests\Ressources;
 
 class Task{}
 
+class Task2{}
 
 class TaskParams{
 

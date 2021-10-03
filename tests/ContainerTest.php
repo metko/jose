@@ -28,6 +28,34 @@ class ContainerTest extends BaseTestCase
         $this->assertInstanceOf('\Tests\Ressources\Task', $this->container->get('task'));
     }
 
+    public function testItCanSetMultipleProviderAsArray()
+    {
+        $this->container->set(['task' => '\Tests\Ressources\Task', 'task2' => '\Tests\Ressources\Task2']);
+        $this->assertInstanceOf('\Tests\Ressources\Task', $this->container->get('task'));
+        $this->assertInstanceOf('\Tests\Ressources\Task2', $this->container->get('task2'));
+    }
+
+    public function testItCanSetWithAFile()
+    {
+        $this->container->set(dirname(__FILE__).'/Ressources/providers.php');
+        $this->assertInstanceOf('\Tests\Ressources\Task', $this->container->get('task'));
+        $this->assertInstanceOf('\Tests\Ressources\Task2', $this->container->get('task2'));
+    }
+
+    public function testItThrowErrorIfFileDoesntExist()
+    {        
+        $this->expectException('\Jose\Exception\NotFoundException');
+        $this->container->set(dirname(__FILE__).'/Ressources/providers99.php');
+        $this->assertInstanceOf('\Tests\Ressources\Task', $this->container->get('task'));
+    }
+
+    public function testItThrowErrorIfFileProvidersAreNotArray()
+    {        
+        $this->expectException('\Jose\Exception\ExpectedTypeException');
+        $this->container->set(dirname(__FILE__).'/Ressources/providers_fake.php');
+        $this->assertInstanceOf('\Tests\Ressources\Task', $this->container->get('task'));
+    }
+
     public function testItCanInstanciateWithParams()
     {
         $this->container->set('taskParams', '\Tests\Ressources\TaskParams');

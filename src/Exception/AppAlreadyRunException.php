@@ -1,5 +1,4 @@
 <?php
 namespace Jose\Exception;
 
-class AppAlreadyRunException extends  \Exception
-{}
+class AppAlreadyRunException extends  \Exception {}

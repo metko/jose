@@ -2,6 +2,4 @@
 
 namespace Jose\Exception;
 
-class PostTypeDoesntExistException extends \Exception {
-
-}
+class PostTypeDoesntExistException extends \Exception {}

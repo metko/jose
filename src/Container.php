@@ -3,6 +3,7 @@
 namespace Jose;
 
 
+use Jose\Exception\ExpectedTypeException;
 use Jose\Exception\NotFoundException;
 
 class Container
@@ -94,13 +95,31 @@ class Container
 
     /**
      * Add a custom providers
-     * @param $key
-     * @param $class
+     * @param String|Array $key
+     * @param String|null $class
      * @return $this
      */
-    public function set($key, $class) :Container
+    public function set($key, $class = null) :Container
     {
-        $this->defaultProviders[$key] = $class;
+        if (is_array($key)) {
+            foreach($key as $k =>$class) {
+                $this->defaultProviders[$k] = $class;
+            }
+        } else if ($class) {
+            $this->defaultProviders[$key] = $class;
+        } else {
+            if ( jose('file')->exists($key)) {
+                $providers = require_once($key);
+                if (!is_array($providers)) {
+                    throw new ExpectedTypeException('Providers file must be an array');
+                }
+                foreach($providers as $k =>$class) {
+                    $this->defaultProviders[$k] = $class;
+                }
+            } else {
+                throw new NotFoundException('Providers file '.$key .' not found');
+            }
+        }
         return $this;
     }
 
