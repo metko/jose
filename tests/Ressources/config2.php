@@ -6,5 +6,6 @@ return [
         'foo' => [
             'bar' => 'awesome'
         ]
-    ]
+    ],
+    'jhon' => 'Doe'
 ];

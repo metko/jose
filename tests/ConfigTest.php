@@ -25,22 +25,21 @@ class ConfigTest extends BaseTestCase
 
     public function testCanGetNestedConfig() {
         $config = $this->container->get('config');
-        $config->set(dirname(__FILE__).'/Ressources/config2.php');
-        $this->assertEquals('awesome', $config->get('nested.foo.bar'));
+        $config->set(['foo' => ['foo' => ['foo' => 'bar']]]);
+        $this->assertEquals('bar', $config->get('foo.foo.foo'));
     }
 
-    public function testCanIncludeSameConfigFileOnlyOnce() {
+    public function testCantIncludeSameConfigFile() {
         $this->expectException('\Jose\Exception\FileAlreadyLoadedException');
         $config = $this->container->get('config');
         $config->set(dirname(__FILE__).'/Ressources/config.php');
+        $config->set(dirname(__FILE__).'/Ressources/config.php');
     }
 
-//    public function testTrhrowExceptionIfConfigFileDoesntExisxt() {
-//        $this->expectException('\Jose\Exception\FileAlreadyLoadedException');
-//        $config = $this->container->get('config');
-//        $config->set(dirname(__FILE__).'/config.php');
-//    }
-
-
+    public function testThrowExceptionIfConfigFileDoesntExisxt() {
+        $this->expectException('\Jose\Exception\NotFoundException');
+        $config = $this->container->get('config');
+        $config->set(dirname(__FILE__).'/config99.php');
+    }
 
 }

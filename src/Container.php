@@ -84,7 +84,7 @@ class Container
                 }
 
             } else {
-               throw new NotFoundException('Class ' . $key . ' not found in container. Did you registered your class in the providers ?');
+                throw new NotFoundException('Class ' . $key . ' not found in container. Did you registered your class in the providers ?');
             }
 
         }

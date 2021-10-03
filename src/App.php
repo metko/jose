@@ -22,6 +22,7 @@ class App
 
     public function __construct()
     {
+        
         // autoload files on hooks
         // dd(jose('config')->get('hooks'));
     }
