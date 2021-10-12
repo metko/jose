@@ -32,11 +32,10 @@ class Dispatcher
 
     public function parseRequest() 
     {
-        dd(is_post_type_archive());
         /*
         * If requested page hhas a template
         */
-        if (isset($this->queried_object->ID)) {
+        if (is_page_template()) {
             // check the value of the meta field template
             $this->action = get_post_meta( $this->queried_object->ID, '_wp_page_template', true);
             if ($this->action) {
@@ -49,7 +48,7 @@ class Dispatcher
         /*
         * If the request is for an post_type archive page
         */
-        if (is_object($this->queried_object) && $this->queried_object instanceof \WP_Post_Type) {
+        if (is_post_type_archive()) {
 
             // Setup the context
             jose('context')->set('page', jose('post_type')->get($this->queried_object->name));
@@ -75,21 +74,29 @@ class Dispatcher
         /*
         * If the request is for an author archive page
         */
-        if (is_object($this->queried_object) && $this->queried_object instanceof \WP_User) {
+        if (is_author()) {
             // Setup the context
             // TODO: FIX AUTHOR CLASS PAGE
+            $author_id = $this->queried_object->ID;
+            $author_login = $this->queried_object->user_login;
             jose('context')->set('page', jose()->castPosts([$this->queried_object], 'user')[0]);
             jose('context')->set('posts', jose()->castPosts($this->posts));
             jose('context')->set('pagination', paginate_links(['type' => 'array']));
 
             // Maybe in the router
-            if (array_key_exists('user', Router::routes())) {
-                $this->action = Router::routes('user');
+            if (array_key_exists("author:$author_id", Router::routes('archive'))) {
+                $this->action = Router::routes('archive')["author:$author_id"];
+            }
+            if (array_key_exists("author:$author_login", Router::routes('archive'))) {
+                $this->action = Router::routes('archive')["author:$author_login"];
+            } 
+            else if (array_key_exists('author', Router::routes('archive'))) {
+                $this->action = Router::routes('archive')['author'];
             } 
             // or autloading class
-            else if (class_exists('\App\Controllers\UserController')) {
-                $this->action = 'UserController@archive';
-            } 
+            // else if (class_exists('\App\Controllers\UserController')) {
+            //     $this->action = 'UserController@archive';
+            // } 
             // Finnaly use the default class
             else {
                 $this->action = 'PostController@archive';
@@ -100,35 +107,51 @@ class Dispatcher
         /*
         * If the request is for a taxonomy archive
         */
-        else if (is_object($this->queried_object) && $this->queried_object instanceof \WP_Term) {
+        else if (is_category() || is_tax()) {
             // Setup the context
-            jose('context')->set('page', jose()->castPosts([$this->queried_object], 'term:' . $this->queried_object->taxonomy)[0]);
+            $taxonomy = $this->queried_object->taxonomy;
+            $term_name = $this->queried_object->slug;
+            $term_id = $this->queried_object->term_id;
+            jose('context')->set('page', jose()->castPosts([$this->queried_object], 'term:' . $taxonomy)[0]);
             jose('context')->set('posts', jose()->castPosts($this->posts));
             jose('context')->set('pagination', paginate_links(['type' => 'array']));
-
-            $taxonomy = $this->queried_object->taxonomy;
-            if (array_key_exists($taxonomy, Router::routes('taxonomy'))) {
-                $this->action = Router::routes('taxonomy')[$taxonomy];
+            if (array_key_exists("${taxonomy}:${term_id}" , Router::routes('taxonomy'))) {
+                $this->action = Router::routes('taxonomy')["${taxonomy}:${term_id}"];
             }
+            else if (array_key_exists("${taxonomy}:${term_name}" , Router::routes('taxonomy'))) {
+                $this->action = Router::routes('taxonomy')["${taxonomy}:${term_name}"];
+            }
+            else if (array_key_exists("${taxonomy}" , Router::routes('taxonomy'))) {
+                $this->action = Router::routes('taxonomy')["${taxonomy}"];
+            } 
+            // By default, check irf we have a TaxonomyController
             else if (class_exists('\App\Controllers\\' . ucfirst($taxonomy) . 'TaxonomyController', false)) {
                 $this->action =  ucfirst($taxonomy) . 'TaxonomyController@index';
             }
+            // No options, go to the post controller
             else {
                 $this->action = 'PostController@archive';
             }
             // dump('tax archive');
         } 
 
-
         /*
         * If the request is for a post single
         */
         else if (is_single()) {
             // Setup the context
-            jose('context')->set('post', jose()->castPosts([$this->queried_object], 'post:' . $this->queried_object->post_type)[0]);
-
             $post_type = $this->queried_object->post_type;
-            if (array_key_exists($post_type, Router::routes('single'))) {
+            $post_slug = $this->queried_object->post_name;
+            $post_id = $this->queried_object->ID;
+            jose('context')->set('post', jose()->castPosts([$this->queried_object], 'post:' . $post_type)[0]);
+
+            if (array_key_exists("$post_type:$post_id", Router::routes('single'))) {
+                $this->action = Router::routes('single')["$post_type:$post_id"];
+            }
+            else if (array_key_exists("$post_type:$post_slug", Router::routes('single'))) {
+                $this->action = Router::routes('single')["$post_type:$post_slug"];
+            }
+            else if (array_key_exists($post_type, Router::routes('single'))) {
                 $this->action = Router::routes('single')[$post_type];
             }
             else if (class_exists('\App\Controllers\\' . ucfirst($post_type) . 'Controller', false)) {
@@ -184,7 +207,24 @@ class Dispatcher
         else if (is_page()) {
             // Setup the context
             jose('context')->set('page', new \App\Models\Page($this->queried_object));
-            $this->action = 'PageController@show';
+            $page_id = $this->queried_object->ID;
+            $page_name = $this->queried_object->post_name;
+            if (array_key_exists("page:$page_id", Router::routes('single'))) {
+                // dd(Router::routes('single')['page']);
+                $this->action = Router::routes('single')["page:$page_id"];
+            }
+            else if (array_key_exists("page:$page_name", Router::routes('single'))) {
+                // dd(Router::routes('single')['page']);
+                $this->action = Router::routes('single')["page:$page_name"];
+            }
+            else if (array_key_exists('page', Router::routes('single'))) {
+                // dd(Router::routes('single')['page']);
+                $this->action = Router::routes('single')['page'];
+            }
+            else {
+                // dd(Router::routes('single')['page']);
+                $this->action = 'PostController@page';
+            }
         }
 
         /*
@@ -192,7 +232,7 @@ class Dispatcher
         */
         else if (is_404()) {
             // TODO: PASS A GOOD CONTEXT
-            if (array_key_exists('e_404', Router::routes())) {
+            if (array_key_exists('404', Router::routes())) {
                 $this->action = Router::routes('e_404');
             } else if (class_exists('\App\Controllers\E_404Controller', false)) {
                 $this->action =  'E_404Controller@index';

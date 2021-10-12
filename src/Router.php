@@ -21,17 +21,17 @@ class Router {
 
     public static function single($post_type, $controller) {
         $router = self::getInstance();
-        $router->routes['single'] = [$post_type => $controller];
+        $router->routes['single'][$post_type] = $controller;
     }
 
     public static function archive($post_type, $controller) {
         $router = self::getInstance();
-        $router->routes['archive'] = [$post_type => $controller];
+        $router->routes['archive'][$post_type] = $controller;
     }
 
     public static function taxonomy($taxonomy, $controller) {
         $router = self::getInstance();
-        $router->routes['taxonomy'] = [$taxonomy => $controller];
+        $router->routes['taxonomy'][$taxonomy] = $controller;
     }
 
     public static function template($template, $controller) {

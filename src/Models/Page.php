@@ -22,25 +22,24 @@ class Page extends BaseModel {
         //dd('$post', $post);
         $this->convert($post);
     }
-    public function convert($post) {
-        // dd('$post', $post);
-        $this->id = $post->ID;
-        $this->author_id = $post->post_author;
-        $this->post_date = $post->post_date;
-        $this->post_content = $post->post_content;
-        $this->title = $post->post_title;
-        $this->status = $post->post_post_status;
-        $this->comment_status = $post->comment_status;
-        $this->excerpt = $post->post_excerpt;
-        $this->slug = $post->post_name;
-        $this->updated_at = $post->post_modified;
-        $this->parent_id = $post->post_parent;
-        $this->post_type =  $post->post_type;
-        $this->comment_count = $post->comment_count;
+    public function convert($page) {
+        $this->id = $page->ID;
+        $this->author_id = $page->post_author;
+        $this->post_date = $page->post_date;
+        $this->conte = $page->post_content;
+        $this->title = $page->post_title;
+        $this->status = $page->post_post_status;
+        $this->comment_status = $page->comment_status;
+        $this->excerpt = $page->post_excerpt;
+        $this->slug = $page->post_name;
+        $this->updated_at = $page->post_modified;
+        $this->parent_id = $page->post_parent;
+        $this->post_type =  $page->post_type;
+        $this->comment_count = $page->comment_count;
     }
 
     public function content () {
-        echo get_the_content($this->id);
+        return $this->post_content;
     }
 
     public function permalink() {
