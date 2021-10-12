@@ -24,7 +24,7 @@ class PostType
      */
     public function new($id, $name, $plural_name): PostTypeBuilder
     {
-         return new PostTypeBuilder($id, $name, $plural_name);
+        return new PostTypeBuilder($id, $name, $plural_name);
     }
 
     /**

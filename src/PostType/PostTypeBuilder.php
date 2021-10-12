@@ -12,55 +12,61 @@ class PostTypeBuilder implements PostTypeInterface
     /**
      * @var string
      */
-    private $id;
+    public $id;
 
     /**
      * @var string
      */
-    private $name;
+    public $name;
 
     /**
      * @var string
      */
-    private $plural_name;
+    public $plural_name;
 
     /**
      * @var array
      */
-    private $labels;
+    public $labels;
 
     /**
      * @var array
      */
-    private $arguments;
+    public $arguments;
 
     /*
      * \StoutLogic\AcfBuilder\FieldsBuilder
      */
-    private $fields;
+    public $fields;
 
     /**
      * @object wp_post_type
      */
-    private $wp_post_type;
+    public $wp_post_type;
 
     /**
      * On archive post type
      * @closure
      */
-    private $on_archive;
+    public $on_archive;
 
     /**
      * On single post type
      * @closure
      */
-    private $on_single;
+    public $on_single;
 
     /**
      * The object model class for timber
      * @object
      */
-    private $model;
+    public $model;
+
+    /**
+     * The archive page name
+     * @object
+     */
+    public $title;
 
     /**
      * PostTypeBuilder constructor.
@@ -89,6 +95,9 @@ class PostTypeBuilder implements PostTypeInterface
     public function create(): PostTypeBuilder
     {
         $this->arguments['labels'] = $this->labels;
+        if (!$this->title) {
+            $this->title = $this->labels['all_items'];
+        }
         $this->wp_post_type = register_post_type(
             $this->id, // Post type name. Max of 20 characters. Uppercase and spaces not allowed.
             $this->arguments      // Arguments for post type.
@@ -114,6 +123,16 @@ class PostTypeBuilder implements PostTypeInterface
     public function setArguments(array $arguments): PostTypeBuilder
     {
         $this->arguments =  array_merge($this->arguments, $arguments);
+        return $this;
+    }
+
+    /**
+     * @param array $arguments
+     * @return PostTypeBuilder
+    */
+    public function setTitle(string $name): PostTypeBuilder
+    {
+        $this->title = $name;
         return $this;
     }
 

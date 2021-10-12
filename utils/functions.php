@@ -17,10 +17,22 @@ if (!function_exists('jose')) {
 /*
  * Config instance
  */
-if (!function_exists('j_config')) {
+if (!function_exists('config')) {
 
-    function j_config()
+    function config($key = null)
     {
         return jose('config');
     }
 }
+
+/*
+ * Config instance
+ */
+if (!function_exists('view')) {
+
+    function view($template, $context = [])
+    {
+        return jose('view')->view($template, $context);
+    }
+}
+

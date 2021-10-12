@@ -22,6 +22,12 @@ interface PostTypeInterface {
     public function setArguments(Array $arguments): PostTypeBuilder;
 
     /*
+    * Set the name the base namae of the archive page
+    * @return PostTypeBuilder with the wp_object
+    */
+    public function setTitle(String $name): PostTypeBuilder;
+
+    /*
     * Pass an array of fields with acf builder
     * @return PostTypeBuilder with the wp_object
     */

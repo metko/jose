@@ -1,5 +1,5 @@
 <?php
-namespace Jose;
+namespace Jose\Components;
 
 use Jose\Exception\FileAlreadyLoadedException;
 use Jose\Exception\NotFoundException;
@@ -93,6 +93,18 @@ class Config {
 
         } else {
             return $config;
+        }
+    }
+
+    public function loadUserConfig ()
+    {
+        // Load config user file
+        if (jose('file')->exists(ROOT_APP . 'config/jose.php')) {
+            $config = require_once(ROOT_APP . 'config/jose.php');
+            jose('config')->set($config);
+            // dd($container->defaultProviders);
+        } else {
+            throw new NotFoundException(ROOT_APP . 'config/jose.php not found'); 
         }
     }
 

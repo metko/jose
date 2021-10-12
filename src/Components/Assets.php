@@ -1,5 +1,5 @@
 <?php
-namespace Jose;
+namespace Jose\Components;
 
 use Jose\Exception\NotFoundException;
 use Jose\Exception\AssetsKeyNotFoundException;

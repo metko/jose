@@ -18,7 +18,8 @@
         "symfony/filesystem": "5.2",
         "symfony/finder": "5.2",
         "stoutlogic/acf-builder": "1.4.0",
-        "timber/timber": "^1.18"
+        "jenssegers/blade": "1.4.0",
+        "monolog/monolog": "2.3.5"
     },
 
     "autoload": {
