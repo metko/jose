@@ -17,7 +17,10 @@ class Post extends BaseModel {
     public $post_type = '';
     public $comment_count = '';
     public $hello = "salut";
+    // CACHED VALUE
     public $__permalink = null;
+    public $__published_at = null;
+
     public function __construct($post) {
         //dd('$post', $post);
         $this->convert($post);
@@ -54,5 +57,21 @@ class Post extends BaseModel {
             $this->__author = new User(get_user_by( 'id', $this->author_id ));
         }
         return $this->__author;
+    }
+
+    public function published_at () {
+        if (!$this->__published_at) {
+            $this->__published_at = \Jose\Classes\DateTime::published_at($this->updated_at);
+        }
+        return $this->__published_at;
+    }
+
+    public function full_date () {
+        return \Jose\Classes\DateTime::full_date($this->updated_at);
+    }
+
+    public function thumbnail_src($size = 'thumbnail') {
+        return wp_get_attachment_image_url(get_post_thumbnail_id($this->id), $size);
+        // return get_the_post_thumbnail_url($this->id, );\
     }
 }

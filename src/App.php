@@ -172,32 +172,22 @@ class App
             // dd($post_type);
             // If the asked type exists
             if (array_key_exists($post_type,  $classMap)) {
-               
                 $modelClass = $classMap[$post_type];
-                // dd($modelClass);
-                if (!class_exists($modelClass)) {
-                    throw new ClassDoesntExistException('Class ' . $modelClass. ' doesnt exists');
-                }
             } else {
-                
                 // Determine which model to load
                 // If its a post type
                 if (isset($post->post_type)) {
-                    
                     $modelClass = array_key_exists('post:' . $post->post_type,  $classMap) ? $classMap['post:' . $post->post_type] : null;
                     if (!$modelClass) {
                         $modelClass = array_key_exists($post->post_type,  $classMap) ? $classMap[$post->post_type] : null;
                         if (!$modelClass) {
                             $modelClass = array_key_exists('post',  $classMap) ? $classMap['post'] : null;
-
                         }
                         if (!$modelClass) {
                             
                             $modelClass = '\Jose\Models\Post';
                         }  
                     }
-                   
-
                 } else if ($post instanceof \WP_Term) {
                     $modelClass = array_key_exists( $post->post_type,  $classMap) ? $post->post_type : '\Jose\Models\Term';
                 } else if ($post instanceof \Wp_User) {
@@ -221,7 +211,7 @@ class App
                 }
             } else {
                 throw new ClassDoesntExistException('Class ' . $modelClass. ' doesnt exists');
-            }
+            }   
             return $data;
         }
         return [];
